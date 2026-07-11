@@ -230,7 +230,16 @@
   .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-width:0;}
   .field-row .field{min-width:0;}
   .field input[type="date"], .field input[type="tel"], .field input[type="text"], .field select{
-    width:100%;max-width:100%;box-sizing:border-box;
+    width:100%;max-width:100%;box-sizing:border-box;height:46px;
+    -webkit-appearance:none;appearance:none;
+  }
+  .field input[type="date"]{
+    min-width:0;
+  }
+  .field select{
+    background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235C4536' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;background-size:16px;
+    padding-right:36px;
   }
   .item-picker{border-top:2px solid var(--border);padding-top:16px;margin-top:6px;}
   .item-picker h4{font-size:15px;margin-bottom:12px;}
@@ -314,6 +323,14 @@
   .thankyou-card h3{font-size:24px;margin-bottom:12px;}
   .thankyou-card p{color:var(--ink-soft);font-size:14px;margin-bottom:0;}
   .thankyou-close{position:absolute;top:14px;right:14px;background:var(--cream);border:2px solid var(--ink);border-radius:50%;width:36px;height:36px;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+  .toast-msg{
+    position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-10px);
+    background:var(--ink);color:var(--cream);padding:12px 20px;border-radius:24px;
+    font-family:'Baloo 2',cursive;font-weight:600;font-size:14px;z-index:1100;
+    opacity:0;pointer-events:none;transition:opacity .25s ease, transform .25s ease;
+    box-shadow:0 8px 20px rgba(0,0,0,0.25);max-width:88vw;text-align:center;
+  }
+  .toast-msg.active{opacity:1;transform:translateX(-50%) translateY(0);}
   .image-modal-close{position:absolute;top:18px;right:18px;background:var(--cream);border:2px solid var(--ink);border-radius:50%;width:42px;height:42px;font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;}
 </style>
 </head>
@@ -814,6 +831,7 @@
       document.getElementById('ord-phone').value = '';
       document.getElementById('ord-date').value = '';
       document.getElementById('ord-time').value = '';
+      updateTimeOptions('');
     } catch(e){
       statusEl.className = 'order-status err';
       statusEl.textContent = 'Could not submit online right now. Please tap "Or call instead" to place your order by phone.';
@@ -822,6 +840,77 @@
     btn.disabled = false;
     btn.textContent = 'Submit order to shop';
   }
+
+  function pad2(n){ return n < 10 ? '0' + n : '' + n; }
+  function todayStr(){ var d = new Date(); return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate()); }
+  function addDaysStr(days){ var d = new Date(); d.setDate(d.getDate() + days); return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate()); }
+
+  var toastTimer = null;
+  function showToast(msg){
+    var el = document.getElementById('toast-msg');
+    el.textContent = msg;
+    el.classList.add('active');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ el.classList.remove('active'); }, 2000);
+  }
+
+  function parseTimeLabel(label){
+    var m = label.match(/(\d+):(\d+)\s*(AM|PM)/i);
+    if(!m) return null;
+    var h = parseInt(m[1],10), min = parseInt(m[2],10), ap = m[3].toUpperCase();
+    if(ap === 'PM' && h !== 12) h += 12;
+    if(ap === 'AM' && h === 12) h = 0;
+    return h*60 + min;
+  }
+
+  function updateTimeOptions(dateVal){
+    var timeSelect = document.getElementById('ord-time');
+    var isToday = dateVal === todayStr();
+    var now = new Date();
+    var nowMinutes = now.getHours()*60 + now.getMinutes();
+    var currentInvalid = false;
+    Array.prototype.forEach.call(timeSelect.options, function(opt){
+      if(!opt.value) return;
+      var mins = parseTimeLabel(opt.value);
+      var disable = isToday && mins !== null && mins <= nowMinutes;
+      opt.disabled = disable;
+      if(disable && timeSelect.value === opt.value) currentInvalid = true;
+    });
+    if(currentInvalid){
+      timeSelect.value = '';
+      showToast("That time isn't available anymore. Please pick another.");
+    }
+  }
+
+  function setupDateRestrictions(){
+    var dateInput = document.getElementById('ord-date');
+    var timeSelect = document.getElementById('ord-time');
+    var minStr = todayStr();
+    var maxStr = addDaysStr(4);
+    dateInput.min = minStr;
+    dateInput.max = maxStr;
+
+    dateInput.addEventListener('change', function(){
+      var val = dateInput.value;
+      if(!val){ updateTimeOptions(''); return; }
+      if(val < minStr || val > maxStr){
+        dateInput.value = '';
+        showToast('That date is not available.');
+        updateTimeOptions('');
+        return;
+      }
+      updateTimeOptions(val);
+    });
+
+    timeSelect.addEventListener('change', function(){
+      var opt = timeSelect.options[timeSelect.selectedIndex];
+      if(opt && opt.disabled){
+        timeSelect.value = '';
+        showToast('That time is not available.');
+      }
+    });
+  }
+  setupDateRestrictions();
 
   loadMenu();
 
@@ -845,6 +934,8 @@
   <button class="image-modal-close" onclick="event.stopPropagation();closeImageModal()" aria-label="Close">&times;</button>
   <img id="modal-img" src="" alt="">
 </div>
+
+<div class="toast-msg" id="toast-msg"></div>
 
 <div class="thankyou-modal" id="thankyou-modal" onclick="closeThankYou()">
   <div class="thankyou-card" onclick="event.stopPropagation()">

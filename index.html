@@ -405,7 +405,7 @@
       <span class="eyebrow">Your cart</span>
       <h2>Review your order</h2>
       <p>Add or remove items below, then fill in your pickup info. You can also call to confirm pickup time.</p>
-      <button class="btn btn-secondary" style="margin-top:16px;" onclick="goPage('menu')">&larr; Add more items from the menu</button>
+      <button id="cart-menu-btn" class="btn btn-secondary" style="margin-top:16px;" onclick="goPage('menu')">&larr; Add items from the menu</button>
     </div>
 
     <div class="order-layout">
@@ -636,6 +636,10 @@
   function renderPicker(){
     var pickerList = document.getElementById('picker-list');
     var items = MENU.filter(function(m){ return qty[m.id] > 0; });
+    var menuBtn = document.getElementById('cart-menu-btn');
+    if(menuBtn){
+      menuBtn.innerHTML = items.length === 0 ? '&larr; Add items from the menu' : '&larr; Add more items from the menu';
+    }
     if(items.length === 0){
       pickerList.innerHTML = '<p class="empty-cart">Nothing in your cart yet &mdash; add items from the <a href="#" onclick="event.preventDefault();goPage(\'menu\')" style="color:var(--strawberry-dark);font-weight:700;">Menu tab</a>.</p>';
       return;
@@ -759,6 +763,7 @@
         qty[m.id] = 0;
         document.querySelectorAll('#qty-' + CSS.escape(m.id)).forEach(function(el){ el.textContent = '0'; });
       });
+      renderPicker();
       renderCart();
       updateFloatingBar();
       document.getElementById('ord-notes').value = '';

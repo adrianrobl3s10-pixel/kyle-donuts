@@ -55,6 +55,11 @@
     font-size:24px;font-weight:700;letter-spacing:0.3px;
     -webkit-tap-highlight-color:transparent;
   }
+  .logo-text{position:relative;padding-bottom:5px;display:inline-block;}
+  .logo-text::after{
+    content:"";position:absolute;left:1px;bottom:-2px;width:72%;height:3px;border-radius:3px;
+    background:linear-gradient(90deg, var(--strawberry), var(--maple));
+  }
   .logo-mark{
     width:34px;height:34px;border-radius:50%;
     background:var(--strawberry);
@@ -338,7 +343,7 @@
 
 <header class="site">
   <div class="nav-row">
-    <div class="logo" id="logo-home-btn" onclick="goHomeFromLogo()" style="cursor:pointer;"><span class="logo-mark"></span> Kyle Donuts</div>
+    <div class="logo" id="logo-home-btn" onclick="goHomeFromLogo()" style="cursor:pointer;"><span class="logo-mark"></span><span class="logo-text">Kyle Donuts</span></div>
     <nav class="tabs">
       <button data-page="home" class="active">Home</button>
       <button data-page="menu">Menu</button>
@@ -452,8 +457,8 @@
     <div class="order-layout">
       <div class="order-form-card">
         <div class="field-row">
-          <div class="field"><label for="ord-name">Your name</label><input id="ord-name" type="text" placeholder="Jamie Lee"></div>
-          <div class="field"><label for="ord-phone">Phone number</label><input id="ord-phone" type="tel" placeholder="(512) 555-0134"></div>
+          <div class="field"><label for="ord-name">Your name <span style="color:var(--strawberry-dark);">*</span></label><input id="ord-name" type="text" placeholder="Jamie Lee"></div>
+          <div class="field"><label for="ord-phone">Phone number <span style="color:var(--strawberry-dark);">*</span></label><input id="ord-phone" type="tel" placeholder="(512) 555-0134"></div>
         </div>
         <div class="field-row">
           <div class="field"><label for="ord-date">Pickup date <span style="color:var(--strawberry-dark);">*</span></label><div style="position:relative;"><input id="ord-date" type="date"><span id="ord-date-placeholder" style="position:absolute;left:13px;top:0;height:46px;display:flex;align-items:center;pointer-events:none;color:var(--ink-soft);font-size:15px;">Select a date</span></div></div>
@@ -955,6 +960,23 @@
     updateTimeColor();
   }
   setupDateRestrictions();
+
+  document.addEventListener('touchstart', function(e){
+    var active = document.activeElement;
+    if(!active) return;
+    var tag = active.tagName ? active.tagName.toLowerCase() : '';
+    if(tag !== 'input' && tag !== 'select' && tag !== 'textarea') return;
+    if(active.contains(e.target)) return;
+    active.blur();
+  }, {passive:true});
+  document.addEventListener('click', function(e){
+    var active = document.activeElement;
+    if(!active) return;
+    var tag = active.tagName ? active.tagName.toLowerCase() : '';
+    if(tag !== 'input' && tag !== 'select' && tag !== 'textarea') return;
+    if(active.contains(e.target)) return;
+    active.blur();
+  });
 
   loadMenu();
 

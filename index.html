@@ -226,7 +226,11 @@
     font-family:'Karla',sans-serif;font-size:15px;background:var(--cream);color:var(--ink);
   }
   .field input:focus, .field textarea:focus, .field select:focus{outline:2px solid var(--strawberry);border-color:var(--strawberry);}
-  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-width:0;}
+  .field-row .field{min-width:0;}
+  .field input[type="date"], .field input[type="tel"], .field input[type="text"], .field select{
+    width:100%;max-width:100%;box-sizing:border-box;
+  }
   .item-picker{border-top:2px solid var(--border);padding-top:16px;margin-top:6px;}
   .item-picker h4{font-size:15px;margin-bottom:12px;}
   .picker-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);gap:10px;}
@@ -302,6 +306,13 @@
   .image-modal{display:none;position:fixed;inset:0;background:rgba(20,10,6,0.85);z-index:999;align-items:center;justify-content:center;padding:20px;}
   .image-modal.active{display:flex;}
   .image-modal img{max-width:92vw;max-height:85vh;object-fit:contain;border-radius:14px;}
+  .thankyou-modal{display:none;position:fixed;inset:0;background:rgba(20,10,6,0.75);z-index:999;align-items:center;justify-content:center;padding:20px;}
+  .thankyou-modal.active{display:flex;}
+  .thankyou-card{background:var(--card);border-radius:20px;padding:34px 28px;max-width:380px;width:100%;text-align:center;position:relative;box-shadow:0 20px 40px rgba(0,0,0,0.3);}
+  .thankyou-card .ty-icon{font-size:44px;margin-bottom:10px;}
+  .thankyou-card h3{font-size:24px;margin-bottom:12px;}
+  .thankyou-card p{color:var(--ink-soft);font-size:14px;margin-bottom:0;}
+  .thankyou-close{position:absolute;top:14px;right:14px;background:var(--cream);border:2px solid var(--ink);border-radius:50%;width:36px;height:36px;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;}
   .image-modal-close{position:absolute;top:18px;right:18px;background:var(--cream);border:2px solid var(--ink);border-radius:50%;width:42px;height:42px;font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;}
 </style>
 </head>
@@ -451,7 +462,7 @@
 
       <div class="cart-card">
         <h3>Your order</h3>
-        <div id="cart-lines"><p class="empty-cart">Nothing selected yet &mdash; add items from the Menu tab.</p></div>
+        <div id="cart-lines"><p class="empty-cart">Nothing selected yet &mdash; add items from the <a href="#" onclick="event.preventDefault();goPage('menu')" style="color:var(--strawberry-dark);font-weight:700;">Menu tab</a>.</p></div>
         <div class="cart-total" id="cart-total" style="display:none;">
           <span>Estimated total</span><span id="cart-total-amt">$0.00</span>
         </div>
@@ -711,7 +722,7 @@
     var totalAmt = document.getElementById('cart-total-amt');
     var items = MENU.filter(function(m){ return qty[m.id] > 0; });
     if(items.length === 0){
-      linesEl.innerHTML = '<p class="empty-cart">Nothing selected yet &mdash; add items from the Menu tab.</p>';
+      linesEl.innerHTML = '<p class="empty-cart">Nothing selected yet &mdash; add items from the <a href="#" onclick="event.preventDefault();goPage(\'menu\')" style="color:var(--strawberry-dark);font-weight:700;">Menu tab</a>.</p>';
       totalWrap.style.display = 'none';
       return;
     }
@@ -777,7 +788,9 @@
         })
       });
       statusEl.className = 'order-status ok';
-      statusEl.textContent = 'Order sent! Kyle Donuts will have it ready around ' + (time || 'your requested time') + '. Call the shop if you need to change anything.';
+      statusEl.textContent = 'Order sent!';
+      document.getElementById('thankyou-message').textContent = 'Kyle Donuts will have it ready around ' + (time || 'your requested time') + '. Call the shop if you need to change anything.';
+      document.getElementById('thankyou-modal').classList.add('active');
       MENU.forEach(function(m){
         qty[m.id] = 0;
         document.querySelectorAll('#qty-' + CSS.escape(m.id)).forEach(function(el){ el.textContent = '0'; });
@@ -806,6 +819,11 @@
     document.getElementById('modal-img').alt = alt;
     document.getElementById('image-modal').classList.add('active');
   }
+  function closeThankYou(){
+    document.getElementById('thankyou-modal').classList.remove('active');
+    goPage('home');
+  }
+
   function closeImageModal(){
     document.getElementById('image-modal').classList.remove('active');
     document.getElementById('modal-img').src = '';
@@ -815,6 +833,15 @@
 <div class="image-modal" id="image-modal" onclick="closeImageModal()">
   <button class="image-modal-close" onclick="event.stopPropagation();closeImageModal()" aria-label="Close">&times;</button>
   <img id="modal-img" src="" alt="">
+</div>
+
+<div class="thankyou-modal" id="thankyou-modal" onclick="closeThankYou()">
+  <div class="thankyou-card" onclick="event.stopPropagation()">
+    <button class="thankyou-close" onclick="closeThankYou()" aria-label="Close">&times;</button>
+    <div class="ty-icon">&#127775;</div>
+    <h3>Thank you!</h3>
+    <p id="thankyou-message"></p>
+  </div>
 </div>
 
 <div class="floating-cart-bar" id="floating-cart-bar">

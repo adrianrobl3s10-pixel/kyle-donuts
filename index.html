@@ -278,7 +278,9 @@
     border-radius:34px;padding:14px 20px 14px 14px;
     text-decoration:none;box-shadow:0 8px 20px rgba(43,24,16,0.35);
     font-family:'Baloo 2',cursive;font-weight:700;font-size:15px;
+    transition:bottom .18s ease;
   }
+  .fab-call.raised{bottom:88px;}
   .fab-call .ring{
     width:32px;height:32px;border-radius:50%;background:var(--strawberry);
     display:flex;align-items:center;justify-content:center;flex:none;
@@ -287,6 +289,7 @@
     .hero h1{font-size:34px;}
     .fab-call span.label{display:none;}
     .fab-call{padding:14px;}
+    .fab-call.raised{bottom:80px;}
   }
   .menu-thumb{cursor:pointer;transition:transform .12s ease;}
   .menu-thumb:active{transform:scale(0.94);}
@@ -406,8 +409,8 @@
   <div class="wrap section">
     <div class="section-head">
       <span class="eyebrow">Your cart</span>
-      <h2>Review your order</h2>
-      <p>Add or remove items below, then fill in your pickup info. You can also call to confirm pickup time.</p>
+      <h2 id="cart-heading">Nothing in your cart yet</h2>
+      <p id="cart-subtext" style="display:none;">Add or remove items below, then fill in your pickup info. You can also call to confirm pickup time.</p>
       <button id="cart-menu-btn" class="btn btn-secondary" style="margin-top:16px;" onclick="goPage('menu')">&larr; Add items from the menu</button>
     </div>
 
@@ -536,7 +539,7 @@
   &copy; Kyle Donuts &middot; 575 Ranch to Market Rd 150, Kyle, TX 78640 &middot; (512) 268-7800
 </footer>
 
-<a class="fab-call" href="tel:+15122687800" aria-label="Call Kyle Donuts">
+<a class="fab-call" id="fab-call" href="tel:+15122687800" aria-label="Call Kyle Donuts">
   <span class="ring">&#128222;</span><span class="label">Call now</span>
 </a>
 
@@ -640,9 +643,13 @@
     var pickerList = document.getElementById('picker-list');
     var items = MENU.filter(function(m){ return qty[m.id] > 0; });
     var menuBtn = document.getElementById('cart-menu-btn');
+    var heading = document.getElementById('cart-heading');
+    var subtext = document.getElementById('cart-subtext');
     if(menuBtn){
       menuBtn.innerHTML = items.length === 0 ? '&larr; Add items from the menu' : '&larr; Add more items from the menu';
     }
+    if(heading) heading.textContent = items.length === 0 ? 'Nothing in your cart yet' : 'Review your order';
+    if(subtext) subtext.style.display = items.length === 0 ? 'none' : 'block';
     if(items.length === 0){
       pickerList.innerHTML = '<p class="empty-cart">Nothing in your cart yet &mdash; add items from the <a href="#" onclick="event.preventDefault();goPage(\'menu\')" style="color:var(--strawberry-dark);font-weight:700;">Menu tab</a>.</p>';
       return;
@@ -678,15 +685,18 @@
   function updateFloatingBar(){
     var bar = document.getElementById('floating-cart-bar');
     var info = document.getElementById('fc-info');
+    var fabCall = document.getElementById('fab-call');
     var items = MENU.filter(function(m){ return qty[m.id] > 0; });
     var count = items.reduce(function(sum, m){ return sum + qty[m.id]; }, 0);
     var total = items.reduce(function(sum, m){ return sum + m.price * qty[m.id]; }, 0);
     if(count === 0 || currentPage === 'order'){
       bar.classList.remove('active');
+      if(fabCall) fabCall.classList.remove('raised');
       return;
     }
     info.innerHTML = count + ' item' + (count === 1 ? '' : 's') + ' &middot; <span>$' + total.toFixed(2) + '</span>';
     bar.classList.add('active');
+    if(fabCall) fabCall.classList.add('raised');
   }
 
   function renderCart(){

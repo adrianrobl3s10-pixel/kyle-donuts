@@ -239,7 +239,7 @@
   .field select{
     background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235C4536' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     background-repeat:no-repeat;background-position:right 12px center;background-size:16px;
-    padding-right:36px;
+    padding-right:36px;transition:color .15s ease;
   }
   .item-picker{border-top:2px solid var(--border);padding-top:16px;margin-top:6px;}
   .item-picker h4{font-size:15px;margin-bottom:12px;}
@@ -887,6 +887,13 @@
       timeSelect.value = '';
       showToast("That time isn't available anymore. Please pick another.");
     }
+    updateTimeColor();
+  }
+
+  function updateTimeColor(){
+    var timeSelect = document.getElementById('ord-time');
+    if(!timeSelect) return;
+    timeSelect.style.color = timeSelect.value ? 'var(--ink)' : 'var(--ink-soft)';
   }
 
   var CLOSE_MINUTES = 13 * 60; // shop closes at 1:00 PM
@@ -941,9 +948,11 @@
         timeSelect.value = '';
         showToast('That time is not available.');
       }
+      updateTimeColor();
     });
 
     updateDatePlaceholder();
+    updateTimeColor();
   }
   setupDateRestrictions();
 

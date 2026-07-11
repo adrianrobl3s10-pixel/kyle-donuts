@@ -456,7 +456,7 @@
           <div class="field"><label for="ord-phone">Phone number</label><input id="ord-phone" type="tel" placeholder="(512) 555-0134"></div>
         </div>
         <div class="field-row">
-          <div class="field"><label for="ord-date">Pickup date <span style="color:var(--strawberry-dark);">*</span></label><input id="ord-date" type="date"></div>
+          <div class="field"><label for="ord-date">Pickup date <span style="color:var(--strawberry-dark);">*</span></label><div style="position:relative;"><input id="ord-date" type="date"><span id="ord-date-placeholder" style="position:absolute;left:13px;top:0;height:46px;display:flex;align-items:center;pointer-events:none;color:var(--ink-soft);font-size:15px;">Select a date</span></div></div>
           <div class="field"><label for="ord-time">Pickup time <span style="color:var(--strawberry-dark);">*</span></label>
             <select id="ord-time">
               <option value="">Select a time</option>
@@ -832,6 +832,7 @@
       document.getElementById('ord-date').value = '';
       document.getElementById('ord-time').value = '';
       updateTimeOptions('');
+      updateDatePlaceholder();
     } catch(e){
       statusEl.className = 'order-status err';
       statusEl.textContent = 'Could not submit online right now. Please tap "Or call instead" to place your order by phone.';
@@ -896,6 +897,13 @@
     return nowMinutes < CLOSE_MINUTES;
   }
 
+  function updateDatePlaceholder(){
+    var dateInput = document.getElementById('ord-date');
+    var ph = document.getElementById('ord-date-placeholder');
+    if(!dateInput || !ph) return;
+    ph.style.display = dateInput.value ? 'none' : 'flex';
+  }
+
   function setupDateRestrictions(){
     var dateInput = document.getElementById('ord-date');
     var timeSelect = document.getElementById('ord-time');
@@ -904,22 +912,27 @@
     dateInput.min = minStr;
     dateInput.max = maxStr;
 
+    dateInput.addEventListener('input', updateDatePlaceholder);
+
     dateInput.addEventListener('change', function(){
       var val = dateInput.value;
-      if(!val){ updateTimeOptions(''); return; }
+      if(!val){ updateTimeOptions(''); updateDatePlaceholder(); return; }
       if(val === todayStr() && !isShopOpenNow()){
         dateInput.value = '';
         showToast("We're closed for today. Please pick another date.");
         updateTimeOptions('');
+        updateDatePlaceholder();
         return;
       }
       if(val < minStr || val > maxStr){
         dateInput.value = '';
         showToast('That date is not available.');
         updateTimeOptions('');
+        updateDatePlaceholder();
         return;
       }
       updateTimeOptions(val);
+      updateDatePlaceholder();
     });
 
     timeSelect.addEventListener('change', function(){
@@ -929,6 +942,8 @@
         showToast('That time is not available.');
       }
     });
+
+    updateDatePlaceholder();
   }
   setupDateRestrictions();
 

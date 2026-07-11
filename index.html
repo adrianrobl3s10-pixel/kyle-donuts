@@ -267,6 +267,12 @@
     .fab-call span.label{display:none;}
     .fab-call{padding:14px;}
   }
+  .menu-thumb{cursor:pointer;transition:transform .12s ease;}
+  .menu-thumb:active{transform:scale(0.94);}
+  .image-modal{display:none;position:fixed;inset:0;background:rgba(20,10,6,0.85);z-index:999;align-items:center;justify-content:center;padding:20px;}
+  .image-modal.active{display:flex;}
+  .image-modal img{max-width:92vw;max-height:85vh;object-fit:contain;border-radius:14px;}
+  .image-modal-close{position:absolute;top:18px;right:18px;background:var(--cream);border:2px solid var(--ink);border-radius:50%;width:42px;height:42px;font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;}
 </style>
 </head>
 <body>
@@ -584,7 +590,8 @@
       var items = g.groups[cat];
       return '<div class="menu-cat"><h3>' + cat + '</h3><div class="menu-list">' +
         items.map(function(m){
-          var thumb = m.image ? '<img src="' + m.image + '" alt="' + m.name + '" style="width:56px;height:56px;object-fit:cover;border-radius:10px;border:2px solid var(--border);flex:none;">' : '';
+          var safeAlt = m.name.replace(/"/g,'&quot;');
+          var thumb = m.image ? '<img class="menu-thumb" src="' + m.image + '" alt="' + safeAlt + '" onclick="openImageModal(\'' + m.image.replace(/'/g,"\\'") + '\',\'' + safeAlt.replace(/'/g,"\\'") + '\')" style="width:56px;height:56px;object-fit:cover;border-radius:10px;border:2px solid var(--border);flex:none;">' : '';
           return '<div class="menu-item">' + thumb + '<div style="flex:1;"><h4>' + m.name + (m.badge ? ' <span class="best-badge">' + m.badge + '</span>' : '') + '</h4><p>' + (m.desc || '') + '</p></div><div class="price">$' + Number(m.price).toFixed(2) + '</div></div>';
         }).join('') + '</div></div>';
     }).join('');
@@ -698,8 +705,22 @@
   }
 
   loadMenu();
+
+  function openImageModal(src, alt){
+    document.getElementById('modal-img').src = src;
+    document.getElementById('modal-img').alt = alt;
+    document.getElementById('image-modal').classList.add('active');
+  }
+  function closeImageModal(){
+    document.getElementById('image-modal').classList.remove('active');
+    document.getElementById('modal-img').src = '';
+  }
 </script>
 
+<div class="image-modal" id="image-modal" onclick="closeImageModal()">
+  <button class="image-modal-close" onclick="event.stopPropagation();closeImageModal()" aria-label="Close">&times;</button>
+  <img id="modal-img" src="" alt="">
+</div>
 
 </body>
 </html>

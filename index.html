@@ -320,7 +320,7 @@
 
 <header class="site">
   <div class="nav-row">
-    <div class="logo" onclick="goPage('home')" style="cursor:pointer;"><span class="logo-mark"></span> Kyle Donuts</div>
+    <div class="logo" id="logo-home-btn" onclick="goHomeFromLogo()" style="cursor:pointer;"><span class="logo-mark"></span> Kyle Donuts</div>
     <nav class="tabs">
       <button data-page="home" class="active">Home</button>
       <button data-page="menu">Menu</button>
@@ -574,8 +574,17 @@
     tabs.forEach(function(t){ t.classList.toggle('active', t.dataset.page === name); });
     window.scrollTo({top:0, behavior:'instant'});
     if(typeof updateFloatingBar === 'function') updateFloatingBar();
+    var logoBtn = document.getElementById('logo-home-btn');
+    if(logoBtn){
+      logoBtn.style.cursor = (name === 'home') ? 'default' : 'pointer';
+    }
   }
   tabs.forEach(function(t){ t.addEventListener('click', function(){ goPage(t.dataset.page); }); });
+
+  function goHomeFromLogo(){
+    if(currentPage === 'home') return;
+    goPage('home');
+  }
 
   var MENU = [];
   var qty = {};
@@ -821,7 +830,7 @@
   }
   function closeThankYou(){
     document.getElementById('thankyou-modal').classList.remove('active');
-    goPage('home');
+    setTimeout(function(){ goPage('home'); }, 500);
   }
 
   function closeImageModal(){

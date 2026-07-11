@@ -320,7 +320,7 @@
         <h1>Fresh donuts, <span>every single morning.</span></h1>
         <p class="lead">Hand-glazed, always warm, and gone by early afternoon. Come see why regulars stop by two or three times a week.</p>
         <div class="cta-row">
-          <button class="btn btn-primary" onclick="goPage('menu')">Order Ahead</button>
+          <button class="btn btn-primary" onclick="goPage('menu')">Order ahead</button>
           <a class="btn btn-secondary" href="tel:+15122687800">Call the shop</a>
         </div>
       </div>
@@ -381,7 +381,7 @@
       </div>
       <div style="text-align:right;">
         <div class="big">4.7 / 5</div>
-        <p>from 395 Google reviews</p>
+        <p>from 395 Google Reviews</p>
       </div>
       <button class="btn btn-primary" onclick="goPage('reviews')">Read reviews</button>
     </div>
@@ -442,7 +442,7 @@
 
       <div class="cart-card">
         <h3>Your order</h3>
-        <div id="cart-lines"><p class="empty-cart">Nothing selected yet &mdash; add items on the left.</p></div>
+        <div id="cart-lines"><p class="empty-cart">Nothing selected yet &mdash; add items from the Menu tab.</p></div>
         <div class="cart-total" id="cart-total" style="display:none;">
           <span>Estimated total</span><span id="cart-total-amt">$0.00</span>
         </div>
@@ -458,7 +458,7 @@
 <section class="page" id="page-reviews">
   <div class="wrap section">
     <div class="section-head">
-      <span class="eyebrow">From Google reviews</span>
+      <span class="eyebrow">From Google Reviews</span>
       <h2>What regulars are saying</h2>
     </div>
 
@@ -466,7 +466,7 @@
       <div class="review-score">4.7</div>
       <div>
         <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p style="margin:4px 0 0;color:var(--ink-soft);">Based on 395 Google reviews</p>
+        <p style="margin:4px 0 0;color:var(--ink-soft);">Based on 395 Google Reviews</p>
       </div>
     </div>
 
@@ -474,27 +474,27 @@
       <div class="review-card">
         <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
         <p>Says they've eaten here daily since discovering it a few days ago and are steadily working through the whole menu.</p>
-        <div class="who">Google review</div>
+        <div class="who">Google Review</div>
       </div>
       <div class="review-card">
         <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
         <p>Called the apple fritter one of the best things they've ever eaten, describing it as a genuinely joyful bite.</p>
-        <div class="who">Google review</div>
+        <div class="who">Google Review</div>
       </div>
       <div class="review-card">
         <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
         <p>A stranger paid for their donuts, and they left touched by how kind and welcoming the staff and customers were.</p>
-        <div class="who">Google review</div>
+        <div class="who">Google Review</div>
       </div>
       <div class="review-card">
         <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
         <p>Noted the pricing runs item by item rather than a flat rate, so specialty donuts cost more than basics.</p>
-        <div class="who">Google review</div>
+        <div class="who">Google Review</div>
       </div>
       <div class="review-card">
         <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
         <p>A longtime regular said the shop always retrieves a fresh-filled batch from the kitchen if a flavor isn't out front.</p>
-        <div class="who">Google review</div>
+        <div class="who">Google Review</div>
       </div>
     </div>
     <p style="margin-top:20px;"><a href="https://maps.app.goo.gl/f5wqruS7FkPe2ctA9?g_st=ic" target="_blank" rel="noopener" style="color:var(--strawberry-dark);font-weight:700;text-decoration:underline;">See all reviews on Google Maps &rarr;</a></p>
@@ -695,7 +695,7 @@
     var totalAmt = document.getElementById('cart-total-amt');
     var items = MENU.filter(function(m){ return qty[m.id] > 0; });
     if(items.length === 0){
-      linesEl.innerHTML = '<p class="empty-cart">Nothing selected yet &mdash; add items on the left.</p>';
+      linesEl.innerHTML = '<p class="empty-cart">Nothing selected yet &mdash; add items from the Menu tab.</p>';
       totalWrap.style.display = 'none';
       return;
     }

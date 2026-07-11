@@ -405,6 +405,7 @@
       <span class="eyebrow">Your cart</span>
       <h2>Review your order</h2>
       <p>Add or remove items below, then fill in your pickup info. You can also call to confirm pickup time.</p>
+      <button class="btn btn-secondary" style="margin-top:16px;" onclick="goPage('menu')">&larr; Add more items from the menu</button>
     </div>
 
     <div class="order-layout">
@@ -543,10 +544,13 @@
 
   var pages = document.querySelectorAll('.page');
   var tabs = document.querySelectorAll('nav.tabs button');
+  var currentPage = 'home';
   function goPage(name){
+    currentPage = name;
     pages.forEach(function(p){ p.classList.toggle('active', p.id === 'page-' + name); });
     tabs.forEach(function(t){ t.classList.toggle('active', t.dataset.page === name); });
     window.scrollTo({top:0, behavior:'instant'});
+    if(typeof updateFloatingBar === 'function') updateFloatingBar();
   }
   tabs.forEach(function(t){ t.addEventListener('click', function(){ goPage(t.dataset.page); }); });
 
@@ -670,7 +674,7 @@
     var items = MENU.filter(function(m){ return qty[m.id] > 0; });
     var count = items.reduce(function(sum, m){ return sum + qty[m.id]; }, 0);
     var total = items.reduce(function(sum, m){ return sum + m.price * qty[m.id]; }, 0);
-    if(count === 0){
+    if(count === 0 || currentPage === 'order'){
       bar.classList.remove('active');
       return;
     }
@@ -758,6 +762,10 @@
       renderCart();
       updateFloatingBar();
       document.getElementById('ord-notes').value = '';
+      document.getElementById('ord-name').value = '';
+      document.getElementById('ord-phone').value = '';
+      document.getElementById('ord-date').value = '';
+      document.getElementById('ord-time').value = '';
     } catch(e){
       statusEl.className = 'order-status err';
       statusEl.textContent = 'Could not submit online right now. Please tap "Or call instead" to place your order by phone.';

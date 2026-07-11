@@ -882,6 +882,8 @@
     }
   }
 
+  var CLOSE_MINUTES = 13 * 60; // shop closes at 1:00 PM
+
   function setupDateRestrictions(){
     var dateInput = document.getElementById('ord-date');
     var timeSelect = document.getElementById('ord-time');
@@ -898,6 +900,16 @@
         showToast('That date is not available.');
         updateTimeOptions('');
         return;
+      }
+      if(val === minStr){
+        var now = new Date();
+        var nowMinutes = now.getHours()*60 + now.getMinutes();
+        if(nowMinutes >= CLOSE_MINUTES){
+          dateInput.value = '';
+          showToast("We're closed for today. Please pick another date.");
+          updateTimeOptions('');
+          return;
+        }
       }
       updateTimeOptions(val);
     });

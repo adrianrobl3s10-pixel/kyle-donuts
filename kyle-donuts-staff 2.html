@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kyle Donuts - Staff</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF6E8;--cream-2:#FCEADA;--ink:#2B1810;--ink-soft:#5C4536;
+    --strawberry:#E2536B;--strawberry-dark:#B8324A;--mint:#3F9C76;
+    --card:#FFFFFF;--border:#EBD9C4;--shadow:0 6px 18px rgba(43,24,16,0.08);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:'Karla',sans-serif;}
+  h1,h2,h3,h4{font-family:'Baloo 2',cursive;color:var(--ink);margin:0;}
+  button{font-family:inherit;cursor:pointer;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:900px;margin:0 auto;padding:30px 20px 90px;}
+  header{position:sticky;top:0;z-index:50;background:var(--cream);border-bottom:2px solid var(--border);padding:16px 20px;display:flex;align-items:center;gap:10px;}
+  .logo-mark{width:30px;height:30px;border-radius:50%;background:var(--strawberry);border:3px solid var(--ink);position:relative;flex:none;}
+  .logo-mark::after{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--cream);}
+  header span.title{font-family:'Baloo 2',cursive;font-size:20px;font-weight:700;}
+  .badge-staff{font-size:11px;background:var(--ink);color:var(--cream);padding:3px 10px;border-radius:10px;margin-left:6px;}
+
+  .pin-gate{max-width:340px;margin:70px auto;background:var(--card);border:2px solid var(--border);border-radius:18px;padding:28px;text-align:center;}
+  .pin-gate input{text-align:center;letter-spacing:4px;font-size:20px;padding:11px;border:2px solid var(--border);border-radius:10px;width:100%;margin-bottom:12px;}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:'Baloo 2',cursive;font-weight:700;font-size:15px;
+    padding:12px 22px;border-radius:26px;border:2.5px solid var(--ink);text-decoration:none;background:var(--cream);color:var(--ink);width:100%;}
+  .btn-primary{background:var(--strawberry);color:#fff;}
+  .btn-ghost{border-color:var(--border);font-size:13px;padding:8px 16px;width:auto;}
+  .btn-danger{background:#FBE4E4;color:var(--strawberry-dark);border-color:var(--strawberry-dark);font-size:13px;padding:8px 14px;width:auto;}
+  .btn-small{width:auto;padding:9px 16px;font-size:13px;}
+
+  .staff-tabs{display:flex;gap:6px;margin:20px 0;flex-wrap:wrap;}
+  .staff-tabs button{padding:9px 14px;border-radius:20px;border:2px solid var(--border);background:var(--card);font-family:'Baloo 2',cursive;font-weight:600;font-size:13px;}
+  .staff-tabs button.active{background:var(--ink);color:var(--cream);border-color:var(--ink);}
+  .staff-view{display:none;}
+  .staff-view.active{display:block;}
+
+  .save-toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-10px);background:var(--ink);color:var(--cream);
+    padding:10px 18px;border-radius:20px;font-family:'Baloo 2',cursive;font-weight:600;font-size:13px;z-index:200;
+    opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;}
+  .save-toast.active{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  .content-section{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:18px;margin-bottom:18px;}
+  .content-section h3{font-size:16px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+  .content-field{margin-bottom:12px;}
+  .content-field label{display:block;font-size:12px;font-weight:700;color:var(--ink-soft);margin-bottom:5px;}
+  .content-field input, .content-field textarea{
+    width:100%;padding:9px 11px;border:2px solid var(--border);border-radius:9px;font-family:inherit;font-size:14px;background:var(--cream);color:var(--ink);
+  }
+  .content-field textarea{resize:vertical;min-height:50px;}
+  .content-field input:focus, .content-field textarea:focus{outline:2px solid var(--strawberry);border-color:var(--strawberry);}
+  .content-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .content-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+  @media (max-width:700px){.content-grid-2, .content-grid-3{grid-template-columns:1fr;}}
+  .content-thumb{width:56px;height:56px;object-fit:cover;border-radius:10px;border:2px solid var(--border);margin-top:6px;}
+
+  .order-card{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:12px;}
+  .order-card .top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px;}
+  .order-card .top h4{font-size:16px;}
+  .order-card .meta{font-size:12px;color:var(--ink-soft);}
+  .order-card ul{margin:8px 0;padding-left:18px;font-size:14px;}
+  .order-card .foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;border-top:1px solid var(--border);padding-top:10px;}
+  .empty-cart{font-size:14px;color:var(--ink-soft);}
+
+  .cat-block{background:var(--card);border:2px solid var(--border);border-radius:16px;margin-bottom:16px;overflow:hidden;}
+  .cat-header{display:flex;align-items:center;gap:10px;background:var(--cream-2);padding:12px 14px;border-bottom:2px solid var(--border);}
+  .cat-header input{flex:1;padding:8px 10px;border:2px solid var(--border);border-radius:8px;font-family:'Baloo 2',cursive;font-weight:700;font-size:15px;background:var(--card);color:var(--ink);}
+  .drag-handle{cursor:grab;font-size:18px;color:var(--ink-soft);flex:none;user-select:none;touch-action:none;padding:2px 4px;}
+  .drag-handle:active{cursor:grabbing;}
+  .cat-block.dragging, .item-row.dragging{opacity:0.4;}
+  .item-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);}
+  .item-row:last-child{border-bottom:none;}
+  .item-row .item-fields{display:grid;grid-template-columns:1.3fr 1.8fr 0.7fr 1.3fr;gap:8px;flex:1;}
+  .item-row .item-fields input{padding:7px 9px;border:2px solid var(--border);border-radius:7px;font-size:12px;width:100%;}
+  @media (max-width:800px){.item-row .item-fields{grid-template-columns:1fr 1fr;}}
+  .drop-line{height:3px;background:var(--strawberry);border-radius:3px;margin:2px 14px;}
+
+  .add-item-card{background:var(--cream-2);border:2px dashed var(--border);border-radius:14px;padding:16px;margin-top:20px;}
+  .add-item-grid{display:grid;grid-template-columns:1.2fr 1fr 2fr 0.8fr 1.2fr;gap:10px;margin-bottom:10px;}
+  @media (max-width:700px){.add-item-grid{grid-template-columns:1fr 1fr;}}
+
+  .review-admin-card{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+  .review-admin-card textarea{width:100%;padding:9px 11px;border:2px solid var(--border);border-radius:9px;font-family:inherit;font-size:14px;background:var(--cream);color:var(--ink);min-height:60px;margin-bottom:10px;}
+  .review-admin-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+  .stars-input{display:flex;align-items:center;gap:8px;}
+  .stars-input input{width:70px;padding:7px 9px;border:2px solid var(--border);border-radius:7px;font-size:13px;}
+  .stars-preview{display:flex;gap:2px;}
+  .stars-preview .star-icon{width:16px;height:16px;}
+  .star-icon{fill:currentColor;display:block;}
+</style>
+</head>
+<body>
+<svg style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
+  <symbol id="ico-star" viewBox="0 0 24 24">
+    <path d="M12 1.8l3.22 6.9 7.48 1.05-5.42 5.36 1.3 7.49L12 18.9l-6.58 3.7 1.3-7.49L1.3 9.75l7.48-1.05L12 1.8z"/>
+  </symbol>
+</svg>
+
+<header>
+  <span class="logo-mark"></span>
+  <span class="title">Kyle Donuts <span class="badge-staff">Staff only</span></span>
+</header>
+
+<div class="save-toast" id="save-toast"></div>
+
+<div class="wrap">
+  <div id="staff-gate">
+    <div class="pin-gate">
+      <h3 style="font-size:19px;margin-bottom:8px;">Staff access</h3>
+      <p style="font-size:13px;color:var(--ink-soft);">Enter the shop PIN to edit the site.</p>
+      <input id="staff-pin" type="password" inputmode="numeric" placeholder="PIN">
+      <button class="btn btn-primary" onclick="checkPin()">Enter</button>
+      <p style="font-size:11px;color:var(--ink-soft);margin-top:10px;">Default PIN is 2468 &mdash; change it in the code (search for STAFF_PIN). This is a simple gate, not real security &mdash; don't share this file's link publicly.</p>
+    </div>
+  </div>
+
+  <div id="staff-area" style="display:none;">
+    <h2>Edit the site</h2>
+    <div class="staff-tabs">
+      <button class="active" data-staff="home" onclick="goStaffTab('home')">Home</button>
+      <button data-staff="menu" onclick="goStaffTab('menu')">Menu</button>
+      <button data-staff="orders" onclick="goStaffTab('orders')">Orders</button>
+      <button data-staff="reviews" onclick="goStaffTab('reviews')">Reviews</button>
+      <button data-staff="visit" onclick="goStaffTab('visit')">Visit</button>
+    </div>
+
+    <!-- HOME TAB -->
+    <div class="staff-view active" id="staff-home">
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;">Changes save automatically and show up on the customer site right away.</p>
+      <div id="home-content-host"></div>
+    </div>
+
+    <!-- MENU TAB -->
+    <div class="staff-view" id="staff-menu">
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;">Drag <span style="font-weight:700;">&#9776;</span> to reorder items or whole categories.</p>
+      <div id="admin-menu-list"></div>
+      <div class="add-item-card">
+        <h4 style="margin-bottom:10px;">Add a new item</h4>
+        <div class="add-item-grid">
+          <input id="new-cat" placeholder="Category (e.g. Drinks)">
+          <input id="new-name" placeholder="Item name">
+          <input id="new-desc" placeholder="Short description">
+          <input id="new-price" placeholder="Price" type="number" step="0.01">
+          <input id="new-image" placeholder="Photo link (optional)">
+        </div>
+        <button class="btn btn-primary" style="width:auto;" onclick="addMenuItem()">Add item</button>
+      </div>
+    </div>
+
+    <!-- ORDERS TAB -->
+    <div class="staff-view" id="staff-orders">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <p style="margin:0;font-size:13px;color:var(--ink-soft);">Refreshes automatically every 20 seconds.</p>
+        <button class="btn btn-ghost" onclick="loadOrders()">Refresh now</button>
+      </div>
+      <div id="orders-list"><p class="empty-cart">Loading orders&hellip;</p></div>
+    </div>
+
+    <!-- REVIEWS TAB -->
+    <div class="staff-view" id="staff-reviews">
+      <div class="content-section">
+        <h3>Overall rating</h3>
+        <div class="content-grid-2">
+          <div class="content-field">
+            <label>Star rating (out of 5, e.g. 4.7)</label>
+            <input id="overall-rating-input" type="number" step="0.1" min="0" max="5" onchange="saveContentField('overall_rating', this.value)">
+          </div>
+          <div class="content-field">
+            <label>Total review count</label>
+            <input id="review-count-input" type="number" step="1" min="0" onchange="saveContentField('review_count', this.value)">
+          </div>
+        </div>
+      </div>
+      <div id="reviews-admin-list"></div>
+      <div class="add-item-card">
+        <h4 style="margin-bottom:10px;">Add a review</h4>
+        <textarea id="new-review-text" placeholder="Review text" style="width:100%;padding:9px 11px;border:2px solid var(--border);border-radius:9px;min-height:60px;margin-bottom:10px;"></textarea>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <label style="font-size:13px;font-weight:700;">Stars:</label>
+          <input id="new-review-stars" type="number" min="1" max="5" value="5" style="width:60px;padding:7px 9px;border:2px solid var(--border);border-radius:7px;">
+          <button class="btn btn-primary" style="width:auto;" onclick="addReview()">Add review</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISIT TAB -->
+    <div class="staff-view" id="staff-visit">
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;">Changes save automatically and show up on the customer site right away.</p>
+      <div id="visit-content-host"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var STAFF_PIN = "2468";
+  var AIRTABLE_TOKEN = "patUbgQPOKqxiSZAq.b1330d4250fd8785307d46cdb3b79e28dec1fca6c8978694e5c1d0410060e0ef";
+  var AIRTABLE_BASE_ID = "appyjrydVv7AWho65";
+  var AIRTABLE_URL = "https://api.airtable.com/v0/" + AIRTABLE_BASE_ID;
+  var MENU = [];
+  var SITE_CONTENT = {};
+  var SITE_CONTENT_RECORD_IDS = {};
+
+  async function airtableFetch(path, options){
+    options = options || {};
+    options.headers = Object.assign({
+      "Authorization": "Bearer " + AIRTABLE_TOKEN,
+      "Content-Type": "application/json"
+    }, options.headers || {});
+    var res = await fetch(AIRTABLE_URL + path, options);
+    if(!res.ok){
+      var text = await res.text();
+      throw new Error("Airtable error " + res.status + ": " + text);
+    }
+    return res.json();
+  }
+
+  function showSaveToast(msg){
+    var el = document.getElementById('save-toast');
+    el.textContent = msg;
+    el.classList.add('active');
+    clearTimeout(showSaveToast._t);
+    showSaveToast._t = setTimeout(function(){ el.classList.remove('active'); }, 1500);
+  }
+
+  function checkPin(){
+    var val = document.getElementById('staff-pin').value;
+    if(val === STAFF_PIN){
+      document.getElementById('staff-gate').style.display = 'none';
+      document.getElementById('staff-area').style.display = 'block';
+      loadOrders();
+      loadMenu();
+      loadSiteContent();
+      loadReviewsAdmin();
+      setInterval(loadOrders, 20000);
+    } else {
+      alert('Incorrect PIN.');
+    }
+  }
+
+  function goStaffTab(name){
+    document.querySelectorAll('.staff-tabs button').forEach(function(b){ b.classList.toggle('active', b.dataset.staff === name); });
+    ['home','menu','orders','reviews','visit'].forEach(function(n){
+      document.getElementById('staff-' + n).classList.toggle('active', n === name);
+    });
+  }
+
+  /* ---------- ORDERS ---------- */
+  async function loadOrders(){
+    var host = document.getElementById('orders-list');
+    try{
+      var data = await airtableFetch("/Orders?filterByFormula=" + encodeURIComponent("{Status}!='Done'") + "&sort[0][field]=SubmittedAt&sort[0][direction]=desc&pageSize=100");
+      var orders = data.records;
+      if(orders.length === 0){
+        host.innerHTML = '<p class="empty-cart">No pending orders. Nice and caught up.</p>';
+        return;
+      }
+      host.innerHTML = orders.map(function(o){
+        var f = o.fields;
+        return '<div class="order-card">' +
+          '<div class="top"><h4>' + (f.CustomerName || '') + '</h4><span class="meta">' + (f.PickupDate || 'no date') + ' &middot; ' + (f.PickupTime || 'no time set') + '</span></div>' +
+          '<div class="meta">Phone: ' + (f.Phone || '') + '</div>' +
+          '<div style="font-size:14px;margin:8px 0;">' + (f.Items || '') + '</div>' +
+          (f.Notes ? '<div class="meta">Note: ' + f.Notes + '</div>' : '') +
+          '<div class="foot"><strong>$' + Number(f.Total || 0).toFixed(2) + '</strong>' +
+          '<button class="btn btn-ghost" onclick="markDone(\'' + o.id + '\')">Mark picked up</button></div>' +
+        '</div>';
+      }).join('');
+    } catch(e){
+      host.innerHTML = '<p class="empty-cart">Could not load orders right now.</p>';
+      console.error(e);
+    }
+  }
+
+  async function markDone(recordId){
+    try{
+      await airtableFetch("/Orders/" + recordId, {
+        method: "PATCH",
+        body: JSON.stringify({ fields: { Status: "Done" } })
+      });
+      loadOrders();
+    } catch(e){
+      alert('Could not update this order: ' + e.message);
+      console.error(e);
+    }
+  }
+
+  /* ---------- MENU (with drag reorder) ---------- */
+  async function loadMenu(){
+    try{
+      var data = await airtableFetch("/Menu?pageSize=100");
+      MENU = data.records.map(function(r){
+        return {
+          id: r.id,
+          category: r.fields.Category || "Other",
+          name: r.fields.Name || "",
+          desc: r.fields.Description || "",
+          price: Number(r.fields.Price) || 0,
+          image: r.fields.ImageURL || "",
+          sortOrder: (r.fields.SortOrder !== undefined && r.fields.SortOrder !== null) ? Number(r.fields.SortOrder) : 999,
+          categoryOrder: (r.fields.CategoryOrder !== undefined && r.fields.CategoryOrder !== null) ? Number(r.fields.CategoryOrder) : 999
+        };
+      });
+      loadMenuIntoAdmin();
+    } catch(e){
+      document.getElementById('admin-menu-list').innerHTML = '<p class="empty-cart">Could not load the menu right now.</p>';
+      console.error(e);
+    }
+  }
+
+  function groupMenuForAdmin(){
+    var groups = {};
+    var order = [];
+    var catOrderVal = {};
+    MENU.forEach(function(m){
+      if(!groups[m.category]){ groups[m.category] = []; order.push(m.category); catOrderVal[m.category] = m.categoryOrder; }
+      groups[m.category].push(m);
+      if(m.categoryOrder < catOrderVal[m.category]) catOrderVal[m.category] = m.categoryOrder;
+    });
+    order.sort(function(a,b){ return catOrderVal[a] - catOrderVal[b]; });
+    Object.keys(groups).forEach(function(cat){
+      groups[cat].sort(function(a,b){ return a.sortOrder - b.sortOrder; });
+    });
+    return {groups:groups, order:order};
+  }
+
+  function loadMenuIntoAdmin(){
+    var host = document.getElementById('admin-menu-list');
+    var g = groupMenuForAdmin();
+    host.innerHTML = g.order.map(function(cat){
+      var items = g.groups[cat];
+      var itemsHtml = items.map(function(m){
+        return '<div class="item-row" draggable="true" data-item-id="' + m.id + '">' +
+          '<span class="drag-handle item-drag-handle">&#9776;</span>' +
+          '<div class="item-fields">' +
+            '<input value="' + m.name.replace(/"/g,'&quot;') + '" onchange="updateItem(\'' + m.id + '\',\'Name\',this.value)">' +
+            '<input value="' + (m.desc||'').replace(/"/g,'&quot;') + '" onchange="updateItem(\'' + m.id + '\',\'Description\',this.value)" placeholder="Description">' +
+            '<input type="number" step="0.01" value="' + m.price + '" onchange="updateItem(\'' + m.id + '\',\'Price\',parseFloat(this.value)||0)">' +
+            '<input value="' + (m.image||'').replace(/"/g,'&quot;') + '" onchange="updateItem(\'' + m.id + '\',\'ImageURL\',this.value)" placeholder="Photo link">' +
+          '</div>' +
+          '<button class="btn btn-danger" style="width:auto;" onclick="removeItem(\'' + m.id + '\')">Delete</button>' +
+        '</div>';
+      }).join('');
+      return '<div class="cat-block" draggable="true" data-cat-name="' + cat.replace(/"/g,'&quot;') + '">' +
+        '<div class="cat-header">' +
+          '<span class="drag-handle cat-drag-handle">&#9776;</span>' +
+          '<input value="' + cat.replace(/"/g,'&quot;') + '" onchange="renameCategory(\'' + cat.replace(/'/g,"\\'") + '\', this.value)">' +
+        '</div>' +
+        '<div class="item-list">' + itemsHtml + '</div>' +
+      '</div>';
+    }).join('');
+    initDragHandlers();
+  }
+
+  async function updateItem(recordId, field, value){
+    try{
+      var fields = {};
+      fields[field] = value;
+      await airtableFetch("/Menu/" + recordId, {
+        method: "PATCH",
+        body: JSON.stringify({ fields: fields })
+      });
+      showSaveToast('Saved');
+    } catch(e){
+      alert('Could not save that change: ' + e.message);
+      console.error(e);
+    }
+  }
+
+  async function renameCategory(oldName, newName){
+    newName = newName.trim();
+    if(!newName || newName === oldName) return;
+    var items = MENU.filter(function(m){ return m.category === oldName; });
+    try{
+      for(var i=0;i<items.length;i++){
+        await airtableFetch("/Menu/" + items[i].id, {
+          method: "PATCH",
+          body: JSON.stringify({ fields: { Category: newName } })
+        });
+      }
+      showSaveToast('Category renamed');
+      loadMenu();
+    } catch(e){
+      alert('Could not rename category: ' + e.message);
+      console.error(e);
+    }
+  }
+
+  async function removeItem(recordId){
+    if(!confirm('Delete this item?')) return;
+    try{
+      await airtableFetch("/Menu/" + recordId, { method: "DELETE" });
+      loadMenu();
+    } catch(e){
+      alert('Could not delete this item: ' + e.message);
+      console.error(e);
+    }
+  }
+
+  async function addMenuItem(){
+    var cat = document.getElementById('new-cat').value.trim() || 'Other';
+    var name = document.getElementById('new-name').value.trim();
+    var desc = document.getElementById('new-desc').value.trim();
+    var price = parseFloat(document.getElementById('new-price').value) || 0;
+    var image = document.getElementById('new-image').value.trim();
+    if(!name){ alert('Give the item a name first.'); return; }
+    var maxSort = 0, maxCatOrder = 0;
+    MENU.forEach(function(m){
+      if(m.sortOrder > maxSort) maxSort = m.sortOrder;
+      if(m.category === cat && m.categoryOrder > maxCatOrder) maxCatOrder = m.categoryOrder;
+    });
+    var catExists = MENU.some(function(m){ return m.category === cat; });
+    var newCatOrder = catExists ? maxCatOrder : (Math.max.apply(null, MENU.map(function(m){return m.categoryOrder;}).concat([0])) + 1);
+    try{
+      await airtableFetch("/Menu", {
+        method: "POST",
+        body: JSON.stringify({
+          fields: { Name: name, Category: cat, Description: desc, Price: price, ImageURL: image, SortOrder: maxSort + 1, CategoryOrder: newCatOrder }
+        })
+      });
+      document.getElementById('new-cat').value = '';
+      document.getElementById('new-name').value = '';
+      document.getElementById('new-desc').value = '';
+      document.getElementById('new-price').value = '';
+      document.getElementById('new-image').value = '';
+      loadMenu();
+    } catch(e){
+      alert('Could not add that item: ' + e.message);
+      console.error(e);
+    }
+  }
+
+  /* ---------- Drag and drop reordering ---------- */
+  var draggedEl = null;
+
+  function initDragHandlers(){
+    var itemRows = document.querySelectorAll('.item-row');
+    itemRows.forEach(function(row){
+      row.addEventListener('dragstart', function(e){
+        draggedEl = row;
+        row.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      row.addEventListener('dragend', function(){
+        row.classList.remove('dragging');
+        draggedEl = null;
+      });
+      row.addEventListener('dragover', function(e){
+        e.preventDefault();
+        if(!draggedEl || draggedEl === row || !draggedEl.classList.contains('item-row')) return;
+        var list = row.parentNode;
+        if(list !== draggedEl.parentNode) return;
+        var rect = row.getBoundingClientRect();
+        var before = (e.clientY - rect.top) < rect.height / 2;
+        list.insertBefore(draggedEl, before ? row : row.nextSibling);
+      });
+      row.addEventListener('drop', function(e){
+        e.preventDefault();
+        if(draggedEl && draggedEl.classList.contains('item-row')){
+          persistItemOrder(row.parentNode);
+        }
+      });
+    });
+
+    var catBlocks = document.querySelectorAll('.cat-block');
+    catBlocks.forEach(function(block){
+      var handle = block.querySelector('.cat-drag-handle');
+      handle.addEventListener('mousedown', function(){ block.setAttribute('draggable','true'); });
+      block.addEventListener('dragstart', function(e){
+        if(e.target.closest('.item-row')){ e.preventDefault(); return; }
+        draggedEl = block;
+        block.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      block.addEventListener('dragend', function(){
+        block.classList.remove('dragging');
+        draggedEl = null;
+      });
+      block.addEventListener('dragover', function(e){
+        if(!draggedEl || !draggedEl.classList.contains('cat-block') || draggedEl === block) return;
+        e.preventDefault();
+        var container = block.parentNode;
+        var rect = block.getBoundingClientRect();
+        var before = (e.clientY - rect.top) < rect.height / 2;
+        container.insertBefore(draggedEl, before ? block : block.nextSibling);
+      });
+      block.addEventListener('drop', function(e){
+        e.preventDefault();
+        if(draggedEl && draggedEl.classList.contains('cat-block')){
+          persistCategoryOrder();
+        }
+      });
+    });
+  }
+
+  async function persistItemOrder(listEl){
+    var rows = listEl.querySelectorAll('.item-row');
+    var updates = [];
+    rows.forEach(function(row, idx){
+      var id = row.getAttribute('data-item-id');
+      var m = MENU.find(function(x){ return x.id === id; });
+      if(m && m.sortOrder !== idx){
+        m.sortOrder = idx;
+        updates.push(airtableFetch("/Menu/" + id, { method:"PATCH", body: JSON.stringify({fields:{SortOrder: idx}}) }));
+      }
+    });
+    try{
+      await Promise.all(updates);
+      showSaveToast('Order saved');
+    } catch(e){
+      console.error(e);
+    }
+  }
+
+  async function persistCategoryOrder(){
+    var blocks = document.querySelectorAll('.cat-block');
+    var updates = [];
+    blocks.forEach(function(block, idx){
+      var catName = block.getAttribute('data-cat-name');
+      MENU.filter(function(m){ return m.category === catName; }).forEach(function(m){
+        if(m.categoryOrder !== idx){
+          m.categoryOrder = idx;
+          updates.push(airtableFetch("/Menu/" + m.id, { method:"PATCH", body: JSON.stringify({fields:{CategoryOrder: idx}}) }));
+        }
+      });
+    });
+    try{
+      await Promise.all(updates);
+      showSaveToast('Category order saved');
+    } catch(e){
+      console.error(e);
+    }
+  }
+
+  /* ---------- SITE CONTENT (Home + Visit) ---------- */
+  var HOME_FIELDS = [
+    {section:'Hero', fields:[
+      {key:'hero_eyebrow', label:'Small tag above headline', type:'text', fallback:'Kyle, Texas · Donuts, kolaches & coffee'},
+      {key:'hero_headline', label:'Main headline', type:'text', fallback:'Fresh donuts, every single morning.'},
+      {key:'hero_lead', label:'Subtext paragraph', type:'textarea', fallback:'Hand-glazed, always warm, and gone by early afternoon. Come see why regulars stop by two or three times a week.'},
+      {key:'hero_photo', label:'Hero photo', type:'image'}
+    ]},
+    {section:'"What people order most" section', fields:[
+      {key:'favorites_eyebrow', label:'Small tag', type:'text', fallback:'Crowd favorites'},
+      {key:'favorites_heading', label:'Heading', type:'text', fallback:'What people order most'},
+      {key:'favorites_sub', label:'Subtext', type:'textarea', fallback:'Real talk from regulars: the apple fritter goes first, so get there early.'}
+    ]},
+    {section:'Top photo card 1', fields:[
+      {key:'flavor1_tag', label:'Tag', type:'text', fallback:'Best seller'},
+      {key:'flavor1_title', label:'Title', type:'text', fallback:'Apple fritter'},
+      {key:'flavor1_desc', label:'Description', type:'textarea', fallback:''},
+      {key:'flavor1_image', label:'Photo', type:'image'}
+    ]},
+    {section:'Top photo card 2', fields:[
+      {key:'flavor2_tag', label:'Tag', type:'text', fallback:'Classic'},
+      {key:'flavor2_title', label:'Title', type:'text', fallback:'Glazed ring'},
+      {key:'flavor2_desc', label:'Description', type:'textarea', fallback:''},
+      {key:'flavor2_image', label:'Photo', type:'image'}
+    ]},
+    {section:'Top photo card 3', fields:[
+      {key:'flavor3_tag', label:'Tag', type:'text', fallback:'Savory'},
+      {key:'flavor3_title', label:'Title', type:'text', fallback:'Jalapeno cheese kolache'},
+      {key:'flavor3_desc', label:'Description', type:'textarea', fallback:''},
+      {key:'flavor3_image', label:'Photo', type:'image'}
+    ]},
+    {section:'Bottom photo card 1', fields:[
+      {key:'bottom1_tag', label:'Tag', type:'text', fallback:'Fresh daily'},
+      {key:'bottom1_title', label:'Title', type:'text', fallback:'Kolache case'},
+      {key:'bottom1_desc', label:'Description', type:'textarea', fallback:''},
+      {key:'bottom1_image', label:'Photo', type:'image'}
+    ]},
+    {section:'Bottom photo card 2', fields:[
+      {key:'bottom2_tag', label:'Tag', type:'text', fallback:'To go'},
+      {key:'bottom2_title', label:'Title', type:'text', fallback:'Assorted box'},
+      {key:'bottom2_desc', label:'Description', type:'textarea', fallback:''},
+      {key:'bottom2_image', label:'Photo', type:'image'}
+    ]},
+    {section:'Bottom photo card 3', fields:[
+      {key:'bottom3_tag', label:'Tag', type:'text', fallback:'Visit us'},
+      {key:'bottom3_title', label:'Title', type:'text', fallback:'Kyle Donuts storefront'},
+      {key:'bottom3_desc', label:'Description', type:'textarea', fallback:''},
+      {key:'bottom3_image', label:'Photo', type:'image'}
+    ]},
+    {section:'Rating banner', fields:[
+      {key:'rating_banner_text', label:'Text under stars', type:'text', fallback:'Loved by the neighborhood for years'}
+    ]}
+  ];
+
+  var VISIT_FIELDS = [
+    {section:'Address', fields:[
+      {key:'visit_address_line1', label:'Street address', type:'text', fallback:'575 Ranch to Market Rd 150'},
+      {key:'visit_address_line2', label:'City, state, zip', type:'text', fallback:'Kyle, TX 78640'}
+    ]},
+    {section:'Hours', fields:[
+      {key:'hours_mon', label:'Monday', type:'text', fallback:'5:00 AM – 1:00 PM'},
+      {key:'hours_tue', label:'Tuesday', type:'text', fallback:'5:00 AM – 1:00 PM'},
+      {key:'hours_wed', label:'Wednesday', type:'text', fallback:'5:00 AM – 1:00 PM'},
+      {key:'hours_thu', label:'Thursday', type:'text', fallback:'5:00 AM – 1:00 PM'},
+      {key:'hours_fri', label:'Friday', type:'text', fallback:'5:00 AM – 1:00 PM'},
+      {key:'hours_sat', label:'Saturday', type:'text', fallback:'5:00 AM – 1:00 PM'},
+      {key:'hours_sun', label:'Sunday', type:'text', fallback:'6:00 AM – 1:00 PM'}
+    ]}
+  ];
+
+  function renderContentForm(hostId, fieldGroups){
+    var host = document.getElementById(hostId);
+    host.innerHTML = fieldGroups.map(function(group){
+      var fieldsHtml = group.fields.map(function(f){
+        var current = SITE_CONTENT[f.key] || {};
+        if(f.type === 'image'){
+          var imgSrc = current.imageUrl || '';
+          return '<div class="content-field">' +
+            '<label>' + f.label + '</label>' +
+            '<input type="text" placeholder="Photo link" value="' + imgSrc.replace(/"/g,'&quot;') + '" ' +
+              'onchange="saveImageField(\'' + f.key + '\', this.value); this.nextElementSibling.src=this.value;">' +
+            (imgSrc ? '<img class="content-thumb" src="' + imgSrc.replace(/"/g,'&quot;') + '">' : '<img class="content-thumb" style="display:none;">') +
+          '</div>';
+        }
+        var val = (current.text !== undefined && current.text !== '') ? current.text : (f.fallback || '');
+        var safeVal = val.replace(/"/g,'&quot;');
+        if(f.type === 'textarea'){
+          return '<div class="content-field"><label>' + f.label + '</label>' +
+            '<textarea onchange="saveContentField(\'' + f.key + '\', this.value)">' + val.replace(/</g,'&lt;') + '</textarea></div>';
+        }
+        return '<div class="content-field"><label>' + f.label + '</label>' +
+          '<input type="text" value="' + safeVal + '" onchange="saveContentField(\'' + f.key + '\', this.value)"></div>';
+      }).join('');
+      return '<div class="content-section"><h3>' + group.section + '</h3>' + fieldsHtml + '</div>';
+    }).join('');
+  }
+
+  async function loadSiteContent(){
+    try{
+      var data = await airtableFetch("/SiteContent?pageSize=100");
+      SITE_CONTENT = {};
+      SITE_CONTENT_RECORD_IDS = {};
+      data.records.forEach(function(r){
+        var k = r.fields.Key;
+        if(!k) return;
+        SITE_CONTENT[k] = { text: r.fields.Text || '', imageUrl: r.fields.ImageURL || '' };
+        SITE_CONTENT_RECORD_IDS[k] = r.id;
+      });
+    } catch(e){
+      console.error('Could not load SiteContent', e);
+    }
+    renderContentForm('home-content-host', HOME_FIELDS);
+    renderContentForm('visit-content-host', VISIT_FIELDS);
+    var r = SITE_CONTENT['overall_rating'];
+    var c = SITE_CONTENT['review_count'];
+    document.getElementById('overall-rating-input').value = (r && r.text) ? r.text : '4.7';
+    document.getElementById('review-count-input').value = (c && c.text) ? c.text : '395';
+  }
+
+  async function upsertSiteContent(key, fields){
+    var recordId = SITE_CONTENT_RECORD_IDS[key];
+    try{
+      if(recordId){
+        await airtableFetch("/SiteContent/" + recordId, { method:"PATCH", body: JSON.stringify({fields: fields}) });
+      } else {
+        var res = await airtableFetch("/SiteContent", { method:"POST", body: JSON.stringify({fields: Object.assign({Key:key}, fields)}) });
+        SITE_CONTENT_RECORD_IDS[key] = res.id;
+      }
+      showSaveToast('Saved');
+    } catch(e){
+      alert('Could not save: ' + e.message);
+      console.error(e);
+    }
+  }
+
+  function saveContentField(key, value){
+    SITE_CONTENT[key] = SITE_CONTENT[key] || {};
+    SITE_CONTENT[key].text = value;
+    upsertSiteContent(key, {Text: value});
+  }
+
+  function saveImageField(key, value){
+    SITE_CONTENT[key] = SITE_CONTENT[key] || {};
+    SITE_CONTENT[key].imageUrl = value;
+    upsertSiteContent(key, {ImageURL: value});
+  }
+
+  /* ---------- REVIEWS ADMIN ---------- */
+  function starIconsHtml(count){
+    var s = '';
+    for(var i=0;i<5;i++){
+      s += '<svg class="star-icon" style="color:' + (i < count ? '#F2A03D' : '#E4D9CB') + ';"><use href="#ico-star"></use></svg>';
+    }
+    return s;
+  }
+
+  async function loadReviewsAdmin(){
+    var host = document.getElementById('reviews-admin-list');
+    try{
+      var data = await airtableFetch("/Reviews?pageSize=100&sort[0][field]=SortOrder&sort[0][direction]=asc");
+      if(data.records.length === 0){
+        host.innerHTML = '<p class="empty-cart">No reviews yet &mdash; add one below.</p>';
+        return;
+      }
+      host.innerHTML = data.records.map(function(r){
+        var f = r.fields;
+        var stars = Number(f.Stars) || 5;
+        return '<div class="review-admin-card">' +
+          '<textarea onchange="updateReviewText(\'' + r.id + '\', this.value)">' + (f.Text||'').replace(/</g,'&lt;') + '</textarea>' +
+          '<div class="review-admin-row">' +
+            '<div class="stars-input">' +
+              '<label style="font-size:12px;font-weight:700;">Stars:</label>' +
+              '<input type="number" min="1" max="5" step="0.1" value="' + stars + '" onchange="updateReviewStars(\'' + r.id + '\', this)">' +
+              '<span class="stars-preview" id="stars-preview-' + r.id + '">' + starIconsHtml(Math.round(stars)) + '</span>' +
+            '</div>' +
+            '<button class="btn btn-danger" style="width:auto;" onclick="deleteReview(\'' + r.id + '\')">Delete</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    } catch(e){
+      host.innerHTML = '<p class="empty-cart">Could not load reviews right now.</p>';
+      console.error(e);
+    }
+  }
+
+  async function updateReviewText(id, value){
+    try{
+      await airtableFetch("/Reviews/" + id, { method:"PATCH", body: JSON.stringify({fields:{Text:value}}) });
+      showSaveToast('Saved');
+    } catch(e){
+      alert('Could not save: ' + e.message);
+    }
+  }
+
+  async function updateReviewStars(id, inputEl){
+    var val = parseFloat(inputEl.value) || 5;
+    val = Math.max(1, Math.min(5, val));
+    var preview = document.getElementById('stars-preview-' + id);
+    if(preview) preview.innerHTML = starIconsHtml(Math.round(val));
+    try{
+      await airtableFetch("/Reviews/" + id, { method:"PATCH", body: JSON.stringify({fields:{Stars:val}}) });
+      showSaveToast('Saved');
+    } catch(e){
+      alert('Could not save: ' + e.message);
+    }
+  }
+
+  async function deleteReview(id){
+    if(!confirm('Delete this review?')) return;
+    try{
+      await airtableFetch("/Reviews/" + id, { method:"DELETE" });
+      loadReviewsAdmin();
+    } catch(e){
+      alert('Could not delete: ' + e.message);
+    }
+  }
+
+  async function addReview(){
+    var text = document.getElementById('new-review-text').value.trim();
+    var stars = parseFloat(document.getElementById('new-review-stars').value) || 5;
+    if(!text){ alert('Write the review text first.'); return; }
+    try{
+      await airtableFetch("/Reviews", {
+        method:"POST",
+        body: JSON.stringify({fields:{Text:text, Stars:stars, SortOrder: Date.now()}})
+      });
+      document.getElementById('new-review-text').value = '';
+      document.getElementById('new-review-stars').value = '5';
+      loadReviewsAdmin();
+    } catch(e){
+      alert('Could not add review: ' + e.message);
+    }
+  }
+</script>
+
+</body>
+</html>

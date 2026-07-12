@@ -529,7 +529,7 @@
 <section class="page" id="page-reviews">
   <div class="wrap section">
     <div class="section-head">
-      <span class="eyebrow">From Google Reviews</span>
+      <span class="eyebrow" contenteditable="true" data-ck="reviews_eyebrow">From Google Reviews</span>
       <h2 contenteditable="true" data-ck="reviews_heading">What regulars are saying</h2>
     </div>
 
@@ -540,7 +540,7 @@
           <span class="star-row stars-bg"><svg class="star-icon"><use href="#ico-star"></use></svg><svg class="star-icon"><use href="#ico-star"></use></svg><svg class="star-icon"><use href="#ico-star"></use></svg><svg class="star-icon"><use href="#ico-star"></use></svg><svg class="star-icon"><use href="#ico-star"></use></svg></span>
           <span class="star-row stars-fg overall-stars-fg" style="width:94%;"><svg class="star-icon"><use href="#ico-star"></use></svg><svg class="star-icon"><use href="#ico-star"></use></svg><svg class="star-icon"><use href="#ico-star"></use></svg><svg class="star-icon"><use href="#ico-star"></use></svg><svg class="star-icon"><use href="#ico-star"></use></svg></span>
         </div>
-        <p style="margin:4px 0 0;color:var(--ink-soft);">Based on <span contenteditable="true" data-ck="review_count">395</span> Google Reviews</p>
+        <p style="margin:4px 0 0;color:var(--ink-soft);"><span contenteditable="true" data-ck="based_on_text">Based on </span><span contenteditable="true" data-ck="review_count">395</span><span contenteditable="true" data-ck="reviews_suffix_text"> Google Reviews</span></p>
       </div>
     </div>
 
@@ -979,7 +979,11 @@
     document.querySelectorAll('[data-ck]').forEach(function(el){
       el.addEventListener('blur', function(){
         var k = el.getAttribute('data-ck');
-        saveContentField(k, el.textContent.trim());
+        var newVal = el.textContent.trim();
+        saveContentField(k, newVal);
+        document.querySelectorAll('[data-ck="' + k + '"]').forEach(function(other){
+          if(other !== el) other.textContent = newVal;
+        });
         if(k === 'overall_rating') updateOverallStarFill();
       });
     });

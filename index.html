@@ -282,6 +282,10 @@
   }
   .review-score{font-family:'Baloo 2',cursive;font-size:56px;font-weight:700;color:var(--ink);}
   .review-stars{color:#F2A03D;font-size:20px;letter-spacing:2px;}
+  .star-rating{position:relative;display:inline-block;font-size:20px;letter-spacing:2px;line-height:1;}
+  .star-rating .stars-bg{color:#E4D9CB;}
+  .star-rating .stars-fg{position:absolute;top:0;left:0;overflow:hidden;white-space:nowrap;color:#F2A03D;}
+  .review-card .star-rating{font-size:14px;}
   .review-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
   .review-card{
     background:var(--card);border:2px solid var(--border);border-radius:16px;padding:18px;
@@ -426,7 +430,10 @@
   <div class="wrap section">
     <div class="rating-banner">
       <div>
-        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="star-rating" style="font-size:22px;" aria-label="4.7 out of 5 stars">
+          <span class="stars-bg" style="color:#5C4A3E;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+          <span class="stars-fg" style="width:94%;color:#FFC94A;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+        </div>
         <p style="margin-top:6px;">Loved by the neighborhood for years</p>
       </div>
       <div style="text-align:right;">
@@ -515,35 +522,43 @@
     <div class="review-summary">
       <div class="review-score">4.7</div>
       <div>
-        <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="star-rating" aria-label="4.7 out of 5 stars">
+          <span class="stars-bg">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+          <span class="stars-fg" style="width:94%;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+        </div>
         <p style="margin:4px 0 0;color:var(--ink-soft);">Based on 395 Google Reviews</p>
       </div>
     </div>
 
     <div class="review-grid">
       <div class="review-card">
-        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p>Says they've eaten here daily since discovering it a few days ago and are steadily working through the whole menu.</p>
+        <div class="star-rating"><span class="stars-bg">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="stars-fg" style="width:100%;">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+        <p>"Everything I've tried here has been great. I found this place a few days ago and I've been back every single day since."</p>
         <div class="who">Google Review</div>
       </div>
       <div class="review-card">
-        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p>Called the apple fritter one of the best things they've ever eaten, describing it as a genuinely joyful bite.</p>
+        <div class="star-rating"><span class="stars-bg">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="stars-fg" style="width:100%;">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+        <p>"A stranger paid for my donuts out of nowhere. It really touched me &mdash; the staff and everyone here are so kind."</p>
         <div class="who">Google Review</div>
       </div>
       <div class="review-card">
-        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p>A stranger paid for their donuts, and they left touched by how kind and welcoming the staff and customers were.</p>
+        <div class="star-rating"><span class="stars-bg">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="stars-fg" style="width:100%;">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+        <p>"The donuts here are always great &mdash; my only issue is I show up too late sometimes and my favorites are already gone."</p>
         <div class="who">Google Review</div>
       </div>
       <div class="review-card">
-        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p>Noted the pricing runs item by item rather than a flat rate, so specialty donuts cost more than basics.</p>
+        <div class="star-rating"><span class="stars-bg">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="stars-fg" style="width:100%;">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+        <p>"There's nothing fancy about how they look, but you know how good they are from the first bite. The staff stay patient and friendly even when the line is long. We're lucky to have this shop in Kyle."</p>
         <div class="who">Google Review</div>
       </div>
       <div class="review-card">
-        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p>A longtime regular said the shop always retrieves a fresh-filled batch from the kitchen if a flavor isn't out front.</p>
+        <div class="star-rating"><span class="stars-bg">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="stars-fg" style="width:100%;">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+        <p>"My go-to spot for breakfast donuts &mdash; always fresh and delicious."</p>
+        <div class="who">Google Review</div>
+      </div>
+      <div class="review-card">
+        <div class="star-rating"><span class="stars-bg">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="stars-fg" style="width:100%;">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+        <p>"A hidden gem in Kyle &mdash; everything from the croissants to the cinnamon rolls is great and reasonably priced. The eclairs and cinnamon rolls are my go-to for weekend breakfast."</p>
         <div class="who">Google Review</div>
       </div>
     </div>

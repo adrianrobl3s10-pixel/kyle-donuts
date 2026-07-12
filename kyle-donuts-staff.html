@@ -396,7 +396,7 @@
 <div id="staff-content" style="display:none;">
 <header class="site">
   <div class="nav-row">
-    <div class="logo" id="logo-home-btn" onclick="goHomeFromLogo()" style="cursor:pointer;"><span class="logo-mark"></span><span class="logo-text" contenteditable="true" data-ck="site_name">Kyle Donuts</span><span class="staff-badge">STAFF EDIT MODE</span></div>
+    <div class="logo" id="logo-home-btn"><span class="logo-mark"></span><span class="logo-text" contenteditable="true" data-ck="site_name">Kyle Donuts</span><span class="staff-badge">STAFF EDIT MODE</span></div>
     <nav class="tabs">
       <button data-page="home" class="active">Home</button>
       <button data-page="menu">Menu</button>
@@ -418,8 +418,8 @@
         <h1 contenteditable="true" data-ck="hero_headline">Fresh donuts, <span>every single morning.</span></h1>
         <p class="lead" contenteditable="true" data-ck="hero_lead">Hand-glazed, always warm, and gone by early afternoon. Come see why regulars stop by two or three times a week.</p>
         <div class="cta-row">
-          <button class="btn btn-primary" onclick="return false;"><span contenteditable="true" data-ck="hero_cta_text" onclick="event.stopPropagation();">Order Ahead</span></button>
-          <a class="btn btn-secondary" href="tel:+15122687800" onclick="event.preventDefault();"><span contenteditable="true" data-ck="hero_call_text" onclick="event.stopPropagation();">Call the shop</span></a>
+          <button class="btn btn-primary" onclick="return false;"><span contenteditable="true" data-ck="hero_cta_text">Order Ahead</span></button>
+          <a class="btn btn-secondary" href="tel:+15122687800" onclick="event.preventDefault();"><span contenteditable="true" data-ck="hero_call_text">Call the shop</span></a>
         </div>
       </div>
       <div class="hero-visual">
@@ -484,7 +484,7 @@
         <div class="big"><span contenteditable="true" data-ck="overall_rating">4.7</span><span contenteditable="true" data-ck="rating_slash_text"> / 5</span></div>
         <p><span contenteditable="true" data-ck="from_text">From </span><span contenteditable="true" data-ck="review_count">395</span><span contenteditable="true" data-ck="reviews_suffix_text"> Google Reviews</span></p>
       </div>
-      <button class="btn btn-primary" onclick="return false;"><span contenteditable="true" data-ck="read_reviews_btn_text" onclick="event.stopPropagation();">Read reviews</span></button>
+      <button class="btn btn-primary" onclick="return false;"><span contenteditable="true" data-ck="read_reviews_btn_text">Read reviews</span></button>
     </div>
   </div>
 </section>
@@ -492,7 +492,7 @@
 <section class="page" id="page-menu">
   <div class="wrap section">
     <div class="section-head">
-      <span class="eyebrow">The menu</span>
+      <span class="eyebrow" contenteditable="true" data-ck="menu_eyebrow">The menu</span>
       <h2 contenteditable="true" data-ck="menu_heading">Made fresh, every morning</h2>
       <p contenteditable="true" data-ck="menu_sub">Flavors rotate &mdash; ask in-store about the day's specials.</p>
     </div>
@@ -561,8 +561,8 @@
 <section class="page" id="page-visit">
   <div class="wrap section">
     <div class="section-head">
-      <span class="eyebrow">Find us</span>
-      <h2>Come say hi</h2>
+      <span class="eyebrow" contenteditable="true" data-ck="visit_eyebrow">Find us</span>
+      <h2 contenteditable="true" data-ck="visit_hero_heading">Come say hi</h2>
     </div>
     <div class="visit-layout">
       <div class="visit-card">
@@ -578,8 +578,8 @@
           <tr><td contenteditable="true" data-ck="day_sun">Sunday</td><td contenteditable="true" data-ck="hours_sun">6:00 AM &ndash; 1:00 PM</td></tr>
         </table>
         <div class="cta-row">
-          <a class="btn btn-primary" href="tel:+15122687800" onclick="event.preventDefault();"><span contenteditable="true" data-ck="visit_call_btn_text" onclick="event.stopPropagation();">Call (512) 268-7800</span></a>
-          <a class="btn btn-secondary" href="https://maps.app.goo.gl/f5wqruS7FkPe2ctA9?g_st=ic" onclick="event.preventDefault();" target="_blank" rel="noopener"><span contenteditable="true" data-ck="visit_directions_btn_text" onclick="event.stopPropagation();">Get directions</span></a>
+          <a class="btn btn-primary" href="tel:+15122687800" onclick="event.preventDefault();"><span contenteditable="true" data-ck="visit_call_btn_text">Call (512) 268-7800</span></a>
+          <a class="btn btn-secondary" href="https://maps.app.goo.gl/f5wqruS7FkPe2ctA9?g_st=ic" onclick="event.preventDefault();" target="_blank" rel="noopener"><span contenteditable="true" data-ck="visit_directions_btn_text">Get directions</span></a>
         </div>
       </div>
       <div class="map-frame">
@@ -594,7 +594,7 @@
 </footer>
 
 <a class="fab-call" id="fab-call" href="tel:+15122687800" onclick="event.preventDefault();" aria-label="Call Kyle Donuts">
-  <span class="ring">&#128222;</span><span class="label" contenteditable="true" data-ck="fab_call_text" onclick="event.stopPropagation();">Call now</span>
+  <span class="ring">&#128222;</span><span class="label" contenteditable="true" data-ck="fab_call_text">Call now</span>
 </a>
 
 <script>
@@ -612,18 +612,8 @@
     pages.forEach(function(p){ p.classList.toggle('active', p.id === 'page-' + name); });
     tabs.forEach(function(t){ t.classList.toggle('active', t.dataset.page === name); });
     window.scrollTo({top:0, behavior:'instant'});
-    var logoBtn = document.getElementById('logo-home-btn');
-    if(logoBtn){
-      logoBtn.style.cursor = (name === 'home') ? 'default' : 'pointer';
-      logoBtn.style.pointerEvents = (name === 'home') ? 'none' : 'auto';
-    }
   }
   tabs.forEach(function(t){ t.addEventListener('click', function(){ goPage(t.dataset.page); }); });
-
-  function goHomeFromLogo(){
-    if(currentPage === 'home') return;
-    goPage('home');
-  }
 
   function openImageModal(src, alt){
     var modal = document.getElementById('image-modal');
@@ -660,6 +650,23 @@
     clearTimeout(showSaveToast._t);
     showSaveToast._t = setTimeout(function(){ el.classList.remove('active'); }, 1500);
   }
+
+  document.addEventListener('touchstart', function(e){
+    var active = document.activeElement;
+    if(!active || active === document.body) return;
+    var isEditable = active.isContentEditable || ['input','select','textarea'].indexOf((active.tagName||'').toLowerCase()) !== -1;
+    if(!isEditable) return;
+    if(active.contains(e.target)) return;
+    active.blur();
+  }, {passive:true});
+  document.addEventListener('click', function(e){
+    var active = document.activeElement;
+    if(!active || active === document.body) return;
+    var isEditable = active.isContentEditable || ['input','select','textarea'].indexOf((active.tagName||'').toLowerCase()) !== -1;
+    if(!isEditable) return;
+    if(active.contains(e.target)) return;
+    active.blur();
+  });
 
   function checkPin(){
     var val = document.getElementById('staff-pin').value;

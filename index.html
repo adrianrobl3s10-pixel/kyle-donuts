@@ -472,21 +472,21 @@
 <section class="page" id="page-order">
   <div class="wrap section">
     <div class="section-head">
-      <span class="eyebrow">Your cart</span>
+      <span class="eyebrow" data-ck="cart_eyebrow">Your cart</span>
       <h2 id="cart-heading">Nothing in your cart yet</h2>
-      <p id="cart-subtext" style="display:none;">Add or remove items below, then fill in your pickup info. You can also call to confirm pickup time.</p>
+      <p id="cart-subtext" data-ck="cart_subtext_text" style="display:none;">Add or remove items below, then fill in your pickup info. You can also call to confirm pickup time.</p>
       <button id="cart-menu-btn" class="btn btn-secondary" style="margin-top:16px;" onclick="goPage('menu')">&larr; Add items from the menu</button>
     </div>
 
     <div class="order-layout">
       <div class="order-form-card">
         <div class="field-row">
-          <div class="field"><label for="ord-name">Your name <span style="color:var(--strawberry-dark);">*</span></label><input id="ord-name" type="text" placeholder="Jamie Lee"></div>
-          <div class="field"><label for="ord-phone">Phone number <span style="color:var(--strawberry-dark);">*</span></label><input id="ord-phone" type="tel" placeholder="(512) 555-0134"></div>
+          <div class="field"><label for="ord-name"><span data-ck="cart_name_label">Your name</span> <span style="color:var(--strawberry-dark);">*</span></label><input id="ord-name" type="text" placeholder="Jamie Lee"></div>
+          <div class="field"><label for="ord-phone"><span data-ck="cart_phone_label">Phone number</span> <span style="color:var(--strawberry-dark);">*</span></label><input id="ord-phone" type="tel" placeholder="(512) 555-0134"></div>
         </div>
         <div class="field-row">
-          <div class="field"><label for="ord-date">Pickup date <span style="color:var(--strawberry-dark);">*</span></label><div style="position:relative;"><input id="ord-date" type="date"><span id="ord-date-placeholder" style="position:absolute;left:13px;top:0;height:46px;display:flex;align-items:center;pointer-events:none;color:var(--ink-soft);font-size:15px;">Select a date</span></div></div>
-          <div class="field"><label for="ord-time">Pickup time <span style="color:var(--strawberry-dark);">*</span></label>
+          <div class="field"><label for="ord-date"><span data-ck="cart_date_label">Pickup date</span> <span style="color:var(--strawberry-dark);">*</span></label><div style="position:relative;"><input id="ord-date" type="date"><span id="ord-date-placeholder" style="position:absolute;left:13px;top:0;height:46px;display:flex;align-items:center;pointer-events:none;color:var(--ink-soft);font-size:15px;">Select a date</span></div></div>
+          <div class="field"><label for="ord-time"><span data-ck="cart_time_label">Pickup time</span> <span style="color:var(--strawberry-dark);">*</span></label>
             <select id="ord-time">
               <option value="">Select a time</option>
               <option>5:30 AM</option><option>6:30 AM</option><option>7:30 AM</option>
@@ -497,26 +497,26 @@
         </div>
 
         <div class="item-picker">
-          <h4>Your items</h4>
+          <h4 data-ck="cart_your_items_label">Your items</h4>
           <div id="picker-list"></div>
         </div>
 
         <div class="field" style="margin-top:14px;">
-          <label for="ord-notes">Special instructions (optional)</label>
+          <label for="ord-notes" data-ck="cart_notes_label">Special instructions (optional)</label>
           <textarea id="ord-notes" rows="2" placeholder="Box separately, extra napkins, etc."></textarea>
         </div>
       </div>
 
       <div class="cart-card">
-        <h3>Your order</h3>
+        <h3 data-ck="cart_your_order_label">Your order</h3>
         <div id="cart-lines"><p class="empty-cart">Nothing selected yet &mdash; add items from the <a href="#" onclick="event.preventDefault();goPage('menu')" style="color:var(--strawberry-dark);font-weight:700;">Menu tab</a>.</p></div>
         <div class="cart-total" id="cart-total" style="display:none;">
           <span>Estimated total</span><span id="cart-total-amt">$0.00</span>
         </div>
-        <button class="btn btn-primary submit-order-btn" id="submit-order-btn" onclick="submitOrder()">Submit order to shop</button>
-        <a class="btn btn-secondary call-order-btn" href="tel:+15122687800">Or call instead</a>
+        <button class="btn btn-primary submit-order-btn" id="submit-order-btn" onclick="submitOrder()"><span data-ck="cart_submit_btn">Submit order to shop</span></button>
+        <a class="btn btn-secondary call-order-btn" href="tel:+15122687800"><span data-ck="cart_call_btn">Or call instead</span></a>
         <div class="order-status" id="order-status"></div>
-        <p class="helper-note">Orders are sent directly to Kyle Donuts. Have your phone on in case they need to reach you.</p>
+        <p class="helper-note" data-ck="cart_helper_note">Orders are sent directly to Kyle Donuts. Have your phone on in case they need to reach you.</p>
       </div>
     </div>
   </div>
@@ -673,6 +673,15 @@
     return {groups:groups, order:order};
   }
 
+  function getMenuInDisplayOrder(){
+    var g = groupByCategory(MENU);
+    var flat = [];
+    g.order.forEach(function(cat){
+      g.groups[cat].forEach(function(m){ flat.push(m); });
+    });
+    return flat;
+  }
+
   function stepperHtml(m){
     return '<div class="stepper">' +
       '<button type="button" aria-label="Remove one ' + m.name + '" data-id="' + m.id + '" data-dir="-1">&minus;</button>' +
@@ -698,19 +707,28 @@
     }).join('');
   }
 
+  var CART_TEXT = {
+    heading_empty: 'Nothing in your cart yet',
+    heading_full: 'Review your order',
+    menu_btn_empty: 'Add items from the menu',
+    picker_empty_msg: 'Nothing in your cart yet',
+    lines_empty_msg: 'Nothing selected yet',
+    menu_tab_link: 'Menu tab'
+  };
+
   function renderPicker(){
     var pickerList = document.getElementById('picker-list');
-    var items = MENU.filter(function(m){ return qty[m.id] > 0; });
+    var items = getMenuInDisplayOrder().filter(function(m){ return qty[m.id] > 0; });
     var menuBtn = document.getElementById('cart-menu-btn');
     var heading = document.getElementById('cart-heading');
     var subtext = document.getElementById('cart-subtext');
     if(menuBtn){
-      menuBtn.innerHTML = items.length === 0 ? '&larr; Add items from the menu' : '&larr; Add more items from the menu';
+      menuBtn.innerHTML = '&larr; ' + CART_TEXT.menu_btn_empty;
     }
-    if(heading) heading.textContent = items.length === 0 ? 'Nothing in your cart yet' : 'Review your order';
+    if(heading) heading.textContent = items.length === 0 ? CART_TEXT.heading_empty : CART_TEXT.heading_full;
     if(subtext) subtext.style.display = items.length === 0 ? 'none' : 'block';
     if(items.length === 0){
-      pickerList.innerHTML = '<p class="empty-cart">Nothing in your cart yet &mdash; add items from the <a href="#" onclick="event.preventDefault();goPage(\'menu\')" style="color:var(--strawberry-dark);font-weight:700;">Menu tab</a>.</p>';
+      pickerList.innerHTML = '<p class="empty-cart">' + CART_TEXT.picker_empty_msg + ' &mdash; add items from the <a href="#" onclick="event.preventDefault();goPage(\'menu\')" style="color:var(--strawberry-dark);font-weight:700;">' + CART_TEXT.menu_tab_link + '</a>.</p>';
       return;
     }
     pickerList.innerHTML = '';
@@ -762,9 +780,9 @@
     var linesEl = document.getElementById('cart-lines');
     var totalWrap = document.getElementById('cart-total');
     var totalAmt = document.getElementById('cart-total-amt');
-    var items = MENU.filter(function(m){ return qty[m.id] > 0; });
+    var items = getMenuInDisplayOrder().filter(function(m){ return qty[m.id] > 0; });
     if(items.length === 0){
-      linesEl.innerHTML = '<p class="empty-cart">Nothing selected yet &mdash; add items from the <a href="#" onclick="event.preventDefault();goPage(\'menu\')" style="color:var(--strawberry-dark);font-weight:700;">Menu tab</a>.</p>';
+      linesEl.innerHTML = '<p class="empty-cart">' + CART_TEXT.lines_empty_msg + ' &mdash; add items from the <a href="#" onclick="event.preventDefault();goPage(\'menu\')" style="color:var(--strawberry-dark);font-weight:700;">' + CART_TEXT.menu_tab_link + '</a>.</p>';
       totalWrap.style.display = 'none';
       return;
     }
@@ -785,7 +803,7 @@
     var time = document.getElementById('ord-time').value;
     var notes = document.getElementById('ord-notes').value.trim();
     var statusEl = document.getElementById('order-status');
-    var items = MENU.filter(function(m){ return qty[m.id] > 0; }).map(function(m){
+    var items = getMenuInDisplayOrder().filter(function(m){ return qty[m.id] > 0; }).map(function(m){
       return {name:m.name, qty:qty[m.id], price:m.price};
     });
 
@@ -1028,6 +1046,12 @@
       var k = el.getAttribute('data-ck-img');
       if(map[k] && map[k].imageUrl) el.src = map[k].imageUrl;
     });
+    Object.keys(CART_TEXT).forEach(function(k){
+      var mapKey = 'cart_' + k;
+      if(map[mapKey] && map[mapKey].text) CART_TEXT[k] = map[mapKey].text;
+    });
+    if(typeof renderPicker === 'function' && document.getElementById('picker-list')) renderPicker();
+    if(typeof renderCart === 'function' && document.getElementById('cart-lines')) renderCart();
     updateOverallStarFill();
   }
 

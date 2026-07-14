@@ -411,6 +411,7 @@
     <nav class="tabs">
       <button data-page="home" class="active" onclick="goPage('home')">Home</button>
       <button data-page="menu" onclick="goPage('menu')">Menu</button>
+      <button data-page="cart" onclick="goPage('cart')">Cart</button>
       <button data-page="reviews" onclick="goPage('reviews')">Reviews</button>
       <button data-page="visit" onclick="goPage('visit')">Visit</button>
     </nav>
@@ -519,6 +520,63 @@
         <input id="new-image" placeholder="Photo link (optional)">
       </div>
       <button class="btn btn-primary" style="width:auto;" onclick="addMenuItem()">Add item</button>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="page-cart">
+  <div class="wrap section">
+    <div class="section-head">
+      <span class="eyebrow" contenteditable="true" data-ck="cart_eyebrow">Your cart</span>
+      <h2 contenteditable="true" data-ck="cart_heading_default">Review your order</h2>
+      <p contenteditable="true" data-ck="cart_subtext_text">Add or remove items below, then fill in your pickup info. You can also call to confirm pickup time.</p>
+      <button class="btn btn-secondary" style="margin-top:16px;" onclick="return false;">&larr; <span contenteditable="true" data-ck="cart_menu_btn_full">Add more items from the menu</span></button>
+    </div>
+
+    <div style="background:var(--cream-2);border:2px solid var(--border);border-radius:14px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:var(--ink-soft);">
+      This page has two versions of some text, since the real cart looks different depending on whether it's empty. Edit both versions below so they're covered either way.
+      <div style="margin-top:10px;"><strong>Heading when empty:</strong> <span contenteditable="true" data-ck="cart_heading_empty" style="display:inline-block;">Nothing in your cart yet</span></div>
+      <div style="margin-top:6px;"><strong>Button label when empty:</strong> &larr; <span contenteditable="true" data-ck="cart_menu_btn_empty" style="display:inline-block;">Add items from the menu</span></div>
+      <div style="margin-top:6px;"><strong>"Your items" empty message:</strong> <span contenteditable="true" data-ck="cart_picker_empty_msg" style="display:inline-block;">Nothing in your cart yet</span> &mdash; add items from the <span contenteditable="true" data-ck="cart_menu_tab_link" style="display:inline-block;">Menu tab</span>.</div>
+      <div style="margin-top:6px;"><strong>"Your order" empty message:</strong> <span contenteditable="true" data-ck="cart_lines_empty_msg" style="display:inline-block;">Nothing selected yet</span> &mdash; add items from the Menu tab.</div>
+    </div>
+
+    <div class="order-layout">
+      <div class="order-form-card">
+        <div class="field-row">
+          <div class="field"><label><span contenteditable="true" data-ck="cart_name_label">Your name</span> <span style="color:var(--strawberry-dark);">*</span></label><input type="text" placeholder="Jamie Lee"></div>
+          <div class="field"><label><span contenteditable="true" data-ck="cart_phone_label">Phone number</span> <span style="color:var(--strawberry-dark);">*</span></label><input type="tel" placeholder="(512) 555-0134"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label><span contenteditable="true" data-ck="cart_date_label">Pickup date</span> <span style="color:var(--strawberry-dark);">*</span></label><input type="date"></div>
+          <div class="field"><label><span contenteditable="true" data-ck="cart_time_label">Pickup time</span> <span style="color:var(--strawberry-dark);">*</span></label>
+            <select>
+              <option value="">Select a time</option>
+              <option>5:30 AM</option><option>6:30 AM</option><option>7:30 AM</option>
+              <option>8:30 AM</option><option>9:30 AM</option><option>10:30 AM</option>
+              <option>11:30 AM</option><option>12:30 PM</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="item-picker">
+          <h4 contenteditable="true" data-ck="cart_your_items_label">Your items</h4>
+          <p class="empty-cart">Nothing in your cart yet &mdash; add items from the <a href="#" onclick="event.preventDefault();" style="color:var(--strawberry-dark);font-weight:700;">Menu tab</a>.</p>
+        </div>
+
+        <div class="field" style="margin-top:14px;">
+          <label contenteditable="true" data-ck="cart_notes_label">Special instructions (optional)</label>
+          <textarea rows="2" placeholder="Box separately, extra napkins, etc."></textarea>
+        </div>
+      </div>
+
+      <div class="cart-card">
+        <h3 contenteditable="true" data-ck="cart_your_order_label">Your order</h3>
+        <p class="empty-cart">Nothing selected yet &mdash; add items from the <a href="#" onclick="event.preventDefault();" style="color:var(--strawberry-dark);font-weight:700;">Menu tab</a>.</p>
+        <button class="btn btn-primary submit-order-btn" onclick="return false;"><span contenteditable="true" data-ck="cart_submit_btn" onclick="event.stopPropagation();">Submit order to shop</span></button>
+        <a class="btn btn-secondary call-order-btn" href="tel:+15122687800" onclick="event.preventDefault();"><span contenteditable="true" data-ck="cart_call_btn">Or call instead</span></a>
+        <p class="helper-note" contenteditable="true" data-ck="cart_helper_note">Orders are sent directly to Kyle Donuts. Have your phone on in case they need to reach you.</p>
+      </div>
     </div>
   </div>
 </section>

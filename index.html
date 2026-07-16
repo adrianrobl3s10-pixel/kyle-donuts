@@ -486,13 +486,17 @@
         </div>
         <div class="field-row">
           <div class="field"><label for="ord-date"><span data-ck="cart_date_label">Pickup date</span> <span style="color:var(--strawberry-dark);">*</span></label><div style="position:relative;"><input id="ord-date" type="date"><span id="ord-date-placeholder" style="position:absolute;left:13px;top:0;height:46px;display:flex;align-items:center;pointer-events:none;color:var(--ink-soft);font-size:15px;">Select a date</span></div></div>
-          <div class="field"><label for="ord-time"><span data-ck="cart_time_label">Pickup time</span> <span style="color:var(--strawberry-dark);">*</span></label>
-            <select id="ord-time">
-              <option value="">Select a time</option>
-              <option>5:30 AM</option><option>6:30 AM</option><option>7:30 AM</option>
-              <option>8:30 AM</option><option>9:30 AM</option><option>10:30 AM</option>
-              <option>11:30 AM</option><option>12:30 PM</option>
-            </select>
+          <div class="field"><label for="ord-time-hour"><span data-ck="cart_time_label">Pickup time</span> <span style="color:var(--strawberry-dark);">*</span></label>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <input id="ord-time-hour" type="number" min="1" max="12" placeholder="Hr" style="width:56px;text-align:center;padding:11px 8px;border:2px solid var(--border);border-radius:10px;font-size:15px;background:var(--cream);color:var(--ink);">
+              <span style="font-weight:700;">:</span>
+              <select id="ord-time-min" style="padding:11px 6px;border:2px solid var(--border);border-radius:10px;font-size:15px;background:var(--cream);color:var(--ink);">
+                <option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option>
+              </select>
+              <select id="ord-time-ampm" style="padding:11px 6px;border:2px solid var(--border);border-radius:10px;font-size:15px;background:var(--cream);color:var(--ink);">
+                <option value="AM">AM</option><option value="PM">PM</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -711,10 +715,13 @@
     heading_empty: 'Nothing in your cart yet',
     heading_full: 'Review your order',
     menu_btn_empty: 'Add items from the menu',
-    picker_empty_msg: 'Nothing in your cart yet',
-    lines_empty_msg: 'Nothing selected yet',
-    menu_tab_link: 'Menu tab'
+    picker_empty_full: 'Nothing in your cart yet &mdash; add items from the Menu tab.',
+    lines_empty_full: 'Nothing selected yet &mdash; add items from the Menu tab.'
   };
+
+  function linkifyMenuTab(text){
+    return text.replace(/Menu tab/, '<a href="#" onclick="event.preventDefault();goPage(\'menu\')" style="color:var(--strawberry-dark);font-weight:700;">Menu tab</a>');
+  }
 
   function renderPicker(){
     var pickerList = document.getElementById('picker-list');
@@ -728,7 +735,7 @@
     if(heading) heading.textContent = items.length === 0 ? CART_TEXT.heading_empty : CART_TEXT.heading_full;
     if(subtext) subtext.style.display = items.length === 0 ? 'none' : 'block';
     if(items.length === 0){
-      pickerList.innerHTML = '<p class="empty-cart">' + CART_TEXT.picker_empty_msg + ' &mdash; add items from the <a href="#" onclick="event.preventDefault();goPage(\'menu\')" style="color:var(--strawberry-dark);font-weight:700;">' + CART_TEXT.menu_tab_link + '</a>.</p>';
+      pickerList.innerHTML = '<p class="empty-cart">' + linkifyMenuTab(CART_TEXT.picker_empty_full) + '</p>';
       return;
     }
     pickerList.innerHTML = '';
@@ -782,7 +789,7 @@
     var totalAmt = document.getElementById('cart-total-amt');
     var items = getMenuInDisplayOrder().filter(function(m){ return qty[m.id] > 0; });
     if(items.length === 0){
-      linesEl.innerHTML = '<p class="empty-cart">' + CART_TEXT.lines_empty_msg + ' &mdash; add items from the <a href="#" onclick="event.preventDefault();goPage(\'menu\')" style="color:var(--strawberry-dark);font-weight:700;">' + CART_TEXT.menu_tab_link + '</a>.</p>';
+      linesEl.innerHTML = '<p class="empty-cart">' + linkifyMenuTab(CART_TEXT.lines_empty_full) + '</p>';
       totalWrap.style.display = 'none';
       return;
     }
@@ -800,7 +807,8 @@
     var name = document.getElementById('ord-name').value.trim();
     var phone = document.getElementById('ord-phone').value.trim();
     var date = document.getElementById('ord-date').value;
-    var time = document.getElementById('ord-time').value;
+    var timeValid = validateTimeEntry();
+    var time = timeValid ? getEnteredTimeLabel() : '';
     var notes = document.getElementById('ord-notes').value.trim();
     var statusEl = document.getElementById('order-status');
     var items = getMenuInDisplayOrder().filter(function(m){ return qty[m.id] > 0; }).map(function(m){
@@ -862,8 +870,7 @@
       document.getElementById('ord-name').value = '';
       document.getElementById('ord-phone').value = '';
       document.getElementById('ord-date').value = '';
-      document.getElementById('ord-time').value = '';
-      updateTimeOptions('');
+      document.getElementById('ord-time-hour').value = '';
       updateDatePlaceholder();
     } catch(e){
       statusEl.className = 'order-status err';
@@ -893,41 +900,6 @@
     toastTimer = setTimeout(function(){ el.classList.remove('active'); }, 2000);
   }
 
-  function parseTimeLabel(label){
-    var m = label.match(/(\d+):(\d+)\s*(AM|PM)/i);
-    if(!m) return null;
-    var h = parseInt(m[1],10), min = parseInt(m[2],10), ap = m[3].toUpperCase();
-    if(ap === 'PM' && h !== 12) h += 12;
-    if(ap === 'AM' && h === 12) h = 0;
-    return h*60 + min;
-  }
-
-  function updateTimeOptions(dateVal){
-    var timeSelect = document.getElementById('ord-time');
-    var isToday = dateVal === todayStr();
-    var now = new Date();
-    var nowMinutes = now.getHours()*60 + now.getMinutes();
-    var currentInvalid = false;
-    Array.prototype.forEach.call(timeSelect.options, function(opt){
-      if(!opt.value) return;
-      var mins = parseTimeLabel(opt.value);
-      var disable = isToday && mins !== null && mins <= nowMinutes;
-      opt.disabled = disable;
-      if(disable && timeSelect.value === opt.value) currentInvalid = true;
-    });
-    if(currentInvalid){
-      timeSelect.value = '';
-      showToast("That time isn't available anymore. Please pick another.");
-    }
-    updateTimeColor();
-  }
-
-  function updateTimeColor(){
-    var timeSelect = document.getElementById('ord-time');
-    if(!timeSelect) return;
-    timeSelect.style.color = timeSelect.value ? 'var(--ink)' : 'var(--ink-soft)';
-  }
-
   var CLOSE_MINUTES = 13 * 60; // shop closes at 1:00 PM
 
   function isShopOpenNow(){
@@ -943,11 +915,74 @@
     ph.style.display = dateInput.value ? 'none' : 'flex';
   }
 
+  var PICKUP_DAYS_AHEAD = 7;
+  var EARLIEST_MINUTES = 5*60 + 30;   // 5:30 AM
+  var LATEST_MINUTES = 12*60 + 45;    // 12:45 PM
+
+  async function loadPickupWindow(){
+    try{
+      var data = await airtableFetch("/SiteContent?filterByFormula=" + encodeURIComponent("{Key}='pickup_days_ahead'"));
+      if(data.records.length > 0){
+        var n = parseInt(data.records[0].fields.Text, 10);
+        if(!isNaN(n) && n > 0) PICKUP_DAYS_AHEAD = n;
+      }
+    } catch(e){
+      console.error('Could not load pickup window, using default', e);
+    }
+  }
+
+  function getEnteredTimeMinutes(){
+    var hourEl = document.getElementById('ord-time-hour');
+    var minEl = document.getElementById('ord-time-min');
+    var ampmEl = document.getElementById('ord-time-ampm');
+    var hour = parseInt(hourEl.value, 10);
+    if(!hour || hour < 1 || hour > 12) return null;
+    var min = parseInt(minEl.value, 10);
+    var ampm = ampmEl.value;
+    var h24 = hour;
+    if(ampm === 'PM' && hour !== 12) h24 += 12;
+    if(ampm === 'AM' && hour === 12) h24 = 0;
+    return h24*60 + min;
+  }
+
+  function getEnteredTimeLabel(){
+    var hourEl = document.getElementById('ord-time-hour');
+    var minEl = document.getElementById('ord-time-min');
+    var ampmEl = document.getElementById('ord-time-ampm');
+    if(!hourEl.value) return '';
+    return hourEl.value + ':' + minEl.value + ' ' + ampmEl.value;
+  }
+
+  function validateTimeEntry(){
+    var hourEl = document.getElementById('ord-time-hour');
+    if(!hourEl.value) return true;
+    var mins = getEnteredTimeMinutes();
+    if(mins === null){
+      hourEl.value = '';
+      return false;
+    }
+    if(mins < EARLIEST_MINUTES || mins > LATEST_MINUTES){
+      showToast('This time is not available. Select a different time.');
+      hourEl.value = '';
+      return false;
+    }
+    var dateInput = document.getElementById('ord-date');
+    if(dateInput.value === todayStr()){
+      var now = new Date();
+      var nowMinutes = now.getHours()*60 + now.getMinutes();
+      if(mins <= nowMinutes){
+        showToast('This time is not available. Select a different time.');
+        hourEl.value = '';
+        return false;
+      }
+    }
+    return true;
+  }
+
   function setupDateRestrictions(){
     var dateInput = document.getElementById('ord-date');
-    var timeSelect = document.getElementById('ord-time');
     var minStr = isShopOpenNow() ? todayStr() : dateStrPlusDays(todayStr(), 1);
-    var maxStr = dateStrPlusDays(minStr, 6);
+    var maxStr = dateStrPlusDays(minStr, PICKUP_DAYS_AHEAD - 1);
     dateInput.min = minStr;
     dateInput.max = maxStr;
 
@@ -955,38 +990,35 @@
 
     dateInput.addEventListener('change', function(){
       var val = dateInput.value;
-      if(!val){ updateTimeOptions(''); updateDatePlaceholder(); return; }
+      if(!val){ updateDatePlaceholder(); return; }
       if(val === todayStr() && !isShopOpenNow()){
         dateInput.value = '';
         showToast("We're closed for today. Please pick another date.");
-        updateTimeOptions('');
         updateDatePlaceholder();
         return;
       }
       if(val < minStr || val > maxStr){
         dateInput.value = '';
         showToast('That date is not available.');
-        updateTimeOptions('');
         updateDatePlaceholder();
         return;
       }
-      updateTimeOptions(val);
       updateDatePlaceholder();
+      validateTimeEntry();
     });
 
-    timeSelect.addEventListener('change', function(){
-      var opt = timeSelect.options[timeSelect.selectedIndex];
-      if(opt && opt.disabled){
-        timeSelect.value = '';
-        showToast('That time is not available.');
-      }
-      updateTimeColor();
+    ['ord-time-hour','ord-time-min','ord-time-ampm'].forEach(function(id){
+      document.getElementById(id).addEventListener('change', validateTimeEntry);
     });
 
     updateDatePlaceholder();
-    updateTimeColor();
   }
-  setupDateRestrictions();
+
+  async function initOrderingSetup(){
+    await loadPickupWindow();
+    setupDateRestrictions();
+  }
+  initOrderingSetup();
 
   (function initHeroParallax(){
     var img = document.querySelector('.hero-photo');
@@ -1026,9 +1058,16 @@
 
   async function loadSiteContent(){
     try{
-      var data = await airtableFetch("/SiteContent?pageSize=100");
+      var allRecords = [];
+      var offset = null;
+      do{
+        var path = "/SiteContent?pageSize=100" + (offset ? "&offset=" + offset : "");
+        var data = await airtableFetch(path);
+        allRecords = allRecords.concat(data.records);
+        offset = data.offset || null;
+      } while(offset);
       var map = {};
-      data.records.forEach(function(r){
+      allRecords.forEach(function(r){
         map[r.fields.Key] = { text: r.fields.Text || "", imageUrl: r.fields.ImageURL || "" };
       });
       applySiteContent(map);
